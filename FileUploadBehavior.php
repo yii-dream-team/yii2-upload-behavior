@@ -22,7 +22,7 @@
  * function behaviors()
  * {
  *     return [
- *         'FileUpload' => [
+ *         'file-upload' => [
  *             'class' => '\lagman\upload\FileUploadBehavior',
  *             'attribute' => 'fileUpload',
  *             'filePath' => '[[web_root]]/uploads/[[id]].[[extension]]',
