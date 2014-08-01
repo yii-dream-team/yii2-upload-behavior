@@ -1,7 +1,7 @@
 {
     "name": "lagman/yii2-upload-behavior",
     "description": "Yii2 file/image upload behavior",
-	"keywords": ["file", "image", "upload", "behavior", "resize", "thumb"]
+	"keywords": ["file", "image", "upload", "behavior", "resize", "thumb"],
     "license": "MIT",
     "authors": [
         {
