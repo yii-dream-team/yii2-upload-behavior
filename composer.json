@@ -14,5 +14,10 @@
         "php": ">=5.4.0",
         "yiisoft/yii2": "*",
 		"masterexploder/phpthumb": "*"
+    },
+    "autoload": {
+        "psr-4": {
+            "lagman\\upload\\": "./"
+        }
     }
 }
