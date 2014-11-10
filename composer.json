@@ -15,6 +15,12 @@
         "yiisoft/yii2": "*",
 		"masterexploder/phpthumb": "*"
     },
+    "repositories": [
+        {
+            "type": "git",
+            "url": "git@github.com:yii-dream-team/PHPThumb.git"
+        },
+	],
     "autoload": {
         "psr-4": {
             "yiidreamteam\\upload\\": "./src"
