@@ -18,7 +18,7 @@
     "repositories": [
         {
             "type": "git",
-            "url": "git@github.com:yii-dream-team/PHPThumb.git"
+            "url": "https://github.com/yii-dream-team/PHPThumb"
         }
 	],
     "autoload": {
