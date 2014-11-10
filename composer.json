@@ -1,5 +1,5 @@
 {
-    "name": "lagman/yii2-upload-behavior",
+    "name": "yii-dream-team/yii2-upload-behavior",
     "description": "Yii2 file/image upload behavior",
 	"keywords": ["file", "image", "upload", "behavior", "resize", "thumb"],
     "license": "MIT",
@@ -17,7 +17,7 @@
     },
     "autoload": {
         "psr-4": {
-            "lagman\\upload\\": "./"
+            "yiidreamteam\\upload\\": "./src"
         }
     }
 }

@@ -11,7 +11,7 @@ Attach the behavior to your model class:
     {
         return [
             'file-upload' => [
-                'class' => '\lagman\upload\FileUploadBehavior',
+                'class' => '\yiidreamteam\upload\FileUploadBehavior',
                 'attribute' => 'fileUpload',
                 'filePath' => '[[web_root]]/uploads/[[id]].[[extension]]',
                 'fileUrl' => '/uploads/[[id]].[[extension]]',
@@ -68,7 +68,7 @@ Attach the behavior to your model class:
     {
         return [
             'image-upload' => [
-                 'class' => '\lagman\upload\ImageUploadBehavior',
+                 'class' => '\yiidreamteam\upload\ImageUploadBehavior',
                  'attribute' => 'imageUpload',
                  'thumbs' => [
                      'thumb' => ['width' => 400, 'height' => 300],
@@ -128,5 +128,5 @@ MIT
     
 ## Contacts ##
 
-* https://github.com/russianlagman/yii2-upload-behavior
-* https://packagist.org/packages/lagman/yii2-upload-behavior
+* https://github.com/yii-dream-team/yii2-upload-behavior
+* https://packagist.org/packages/yii-dream-team/yii2-upload-behavior
