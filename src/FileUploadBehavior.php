@@ -55,6 +55,8 @@ class FileUploadBehavior extends \yii\base\Behavior
     public $filePath = '@web/uploads/[[id]].[[extension]]';
     /** @var string Where to store images. */
     public $fileUrl = '/uploads/[[id]].[[extension]]';
+    /** @var string Where to store images. */
+    public $emptyUrl = '/img/empty.jpg';
     /** @var string Attribute used to link owner model with it's parent */
     public $parentRelationAttribute;
     /** @var \yii\web\UploadedFile */
@@ -80,6 +82,11 @@ class FileUploadBehavior extends \yii\base\Behavior
      */
     public function beforeValidate()
     {
+        if ($this->owner->{$this->attribute} instanceof UploadedFile)
+        {
+            $this->file = $this->owner->{$this->attribute};
+            return;
+        }
         $this->file = UploadedFile::getInstance($this->owner, $this->attribute);
 
         if ($this->file instanceof UploadedFile) {
@@ -126,6 +133,7 @@ class FileUploadBehavior extends \yii\base\Behavior
         $path = str_replace('[[web_root]]', Yii::getAlias('@webroot'), $path);
         $path = str_replace('[[base_url]]', Yii::getAlias('@web'), $path);
 
+        
         $r = new \ReflectionClass($this->owner->className());
         $path = str_replace('[[model]]', lcfirst($r->getShortName()), $path);
 
@@ -137,6 +145,10 @@ class FileUploadBehavior extends \yii\base\Behavior
             $path = str_replace('[[parent_id]]', $this->owner->{$this->parentRelationAttribute}, $path);
 
         $pi = pathinfo($this->owner->{$this->attribute});
+        if($pi['basename'] == '') {
+            return $this->emptyUrl;
+        }
+        
         $path = str_replace('[[extension]]', strtolower($pi['extension']), $path);
         $path = str_replace('[[filename]]', $pi['filename'], $path);
         $path = str_replace('[[basename]]', $pi['filename'] . '.' . strtolower($pi['extension']), $path);
@@ -166,7 +178,7 @@ class FileUploadBehavior extends \yii\base\Behavior
     {
         if ($this->file instanceof UploadedFile) {
             $path = $this->getUploadedFilePath($this->attribute);
-            @mkdir(pathinfo($path, PATHINFO_DIRNAME), 777, true);
+            \yii\helpers\FileHelper::createDirectory(pathinfo($path, PATHINFO_DIRNAME), 0775, true);
             if (!$this->file->saveAs($path)) {
                 throw new Exception('File saving error.');
             }

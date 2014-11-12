@@ -15,6 +15,7 @@ Attach the behavior to your model class:
                 'attribute' => 'fileUpload',
                 'filePath' => '[[web_root]]/uploads/[[id]].[[extension]]',
                 'fileUrl' => '/uploads/[[id]].[[extension]]',
+                'emptyUrl' => '/images/nofile.jpg',
             ],
         ];
     }
@@ -77,6 +78,7 @@ Attach the behavior to your model class:
                  'fileUrl' => '/images/[[model]]/[[id]].[[extension]]',
                  'thumbPath' => '[[web_root]]/images/[[model]]/[[profile]]_[[id]].[[extension]]',
                  'thumbUrl' => '/images/[[model]]/[[profile]]_[[id]].[[extension]]',
+                 'emptyUrl' => '/images/noimage.jpg',
             ],
         ];
     }
@@ -99,7 +101,7 @@ Add validation rule:
     public function rules()
     {
         return [
-            ['imageUpload', 'file', 'types' => 'jpeg, gif, png'],   
+            ['imageUpload', 'file', 'extensions' => 'jpeg, gif, png'],   
         ];
     }
     
