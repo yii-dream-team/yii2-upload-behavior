@@ -109,14 +109,32 @@ class ImageUploadBehavior extends FileUploadBehavior
         $behavior = static::getInstance($this->owner, $attribute);
         return $behavior->resolveProfilePath($behavior->thumbPath, $profile);
     }
+    
+    /**
+     * 
+     * @param string $attribute
+     * @param string $emptyUrl
+     * @return string
+     */
+    public function getImageFileUrl($attribute, $emptyUrl = null)
+    {
+        if (!$this->owner->$attribute) {
+            return $emptyUrl;
+        }
+        return $this->getUploadedFileUrl($attribute);
+    }
 
     /**
      * @param string $attribute
      * @param string $profile
+     * @param string $emptyUrl
      * @return string
      */
-    public function getThumbFileUrl($attribute, $profile = 'thumb')
+    public function getThumbFileUrl($attribute, $profile = 'thumb', $emptyUrl = null)
     {
+        if (!$this->owner->$attribute) {
+            return $emptyUrl;
+        }
         $behavior = static::getInstance($this->owner, $attribute);
         if ($behavior->createThumbsOnRequest)
             $behavior->createThumbs();

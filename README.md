@@ -15,6 +15,7 @@ Attach the behavior to your model class:
                 'attribute' => 'fileUpload',
                 'filePath' => '[[web_root]]/uploads/[[id]].[[extension]]',
                 'fileUrl' => '/uploads/[[id]].[[extension]]',
+                'emptyUrl' => '/images/nofile.jpg',
             ],
         ];
     }
@@ -117,11 +118,19 @@ File should be uploading fine.
 
 You can get uploaded image url using model call:
 
-    echo $model->getUploadedFileUrl('imageUpload');
+    echo $model->getImageFileUrl('imageUpload');
+
+or:
+
+    echo $model->getImageFileUrl('imageUpload', '/images/empty.jpg');
     
 You can also get generated thumbnail image url:
-  
+
     echo $model->getThumbFileUrl('imageUpload', 'thumb');
+
+or:
+  
+    echo $model->getThumbFileUrl('imageUpload', 'thumb', '/images/empty.jpg');
     
 ## Licence ##
 
