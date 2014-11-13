@@ -15,7 +15,6 @@ Attach the behavior to your model class:
                 'attribute' => 'fileUpload',
                 'filePath' => '[[web_root]]/uploads/[[id]].[[extension]]',
                 'fileUrl' => '/uploads/[[id]].[[extension]]',
-                'emptyUrl' => '/images/nofile.jpg',
             ],
         ];
     }
