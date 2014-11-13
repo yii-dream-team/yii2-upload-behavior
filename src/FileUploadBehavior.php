@@ -146,19 +146,16 @@ class FileUploadBehavior extends \yii\base\Behavior
             $path = str_replace('[[parent_id]]', $this->owner->{$this->parentRelationAttribute}, $path);
 
         $pi = pathinfo($this->owner->{$this->attribute});
+        if($pi['basename'] == '') {
+            return $this->emptyUrl;
+        }
         $fileName = ArrayHelper::getValue($pi, 'filename');
         $extension = strtolower(ArrayHelper::getValue($pi, 'extension'));
 
         $path = str_replace('[[extension]]', $extension, $path);
         $path = str_replace('[[filename]]', $fileName, $path);
         $path = str_replace('[[basename]]', $fileName . '.' . $extension, $path);
-        if($pi['basename'] == '') {
-            return $this->emptyUrl;
-        }
         
-        $path = str_replace('[[extension]]', strtolower($pi['extension']), $path);
-        $path = str_replace('[[filename]]', $pi['filename'], $path);
-        $path = str_replace('[[basename]]', $pi['filename'] . '.' . strtolower($pi['extension']), $path);
         return $path;
     }
 
