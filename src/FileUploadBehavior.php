@@ -37,6 +37,7 @@ use Yii;
 use yii\base\Exception;
 use yii\base\InvalidCallException;
 use yii\db\ActiveRecord;
+use yii\helpers\ArrayHelper;
 use yii\helpers\VarDumper;
 use yii\web\UploadedFile;
 
@@ -137,9 +138,12 @@ class FileUploadBehavior extends \yii\base\Behavior
             $path = str_replace('[[parent_id]]', $this->owner->{$this->parentRelationAttribute}, $path);
 
         $pi = pathinfo($this->owner->{$this->attribute});
-        $path = str_replace('[[extension]]', strtolower($pi['extension']), $path);
-        $path = str_replace('[[filename]]', $pi['filename'], $path);
-        $path = str_replace('[[basename]]', $pi['filename'] . '.' . strtolower($pi['extension']), $path);
+        $fileName = ArrayHelper::getValue($pi, 'filename');
+        $extension = strtolower(ArrayHelper::getValue($pi, 'extension'));
+
+        $path = str_replace('[[extension]]', $extension, $path);
+        $path = str_replace('[[filename]]', $fileName, $path);
+        $path = str_replace('[[basename]]', $fileName . '.' . $extension, $path);
         return $path;
     }
 
