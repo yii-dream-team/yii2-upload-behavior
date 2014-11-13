@@ -56,8 +56,6 @@ class FileUploadBehavior extends \yii\base\Behavior
     public $filePath = '@web/uploads/[[id]].[[extension]]';
     /** @var string Where to store images. */
     public $fileUrl = '/uploads/[[id]].[[extension]]';
-    /** @var string Where to store images. */
-    public $emptyUrl = '/img/empty.jpg';
     /** @var string Attribute used to link owner model with it's parent */
     public $parentRelationAttribute;
     /** @var \yii\web\UploadedFile */
@@ -146,9 +144,6 @@ class FileUploadBehavior extends \yii\base\Behavior
             $path = str_replace('[[parent_id]]', $this->owner->{$this->parentRelationAttribute}, $path);
 
         $pi = pathinfo($this->owner->{$this->attribute});
-        if($pi['basename'] == '') {
-            return $this->emptyUrl;
-        }
         $fileName = ArrayHelper::getValue($pi, 'filename');
         $extension = strtolower(ArrayHelper::getValue($pi, 'extension'));
 
