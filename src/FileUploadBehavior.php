@@ -113,7 +113,7 @@ class FileUploadBehavior extends \yii\base\Behavior
     /**
      * Removes files associated with attribute
      */
-    protected function cleanFiles()
+    public function cleanFiles()
     {
         $path = $this->resolvePath($this->filePath);
         @unlink($path);
