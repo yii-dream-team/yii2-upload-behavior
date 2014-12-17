@@ -8,7 +8,7 @@
  * [[app_root]] - application root
  * [[web_root]] - web root
  * [[model]] - model name
- * [[id]] - model id
+ * [[attribute]] - model attribute (may be id or other model attribute)
  * [[id_path]] - id subdirectories structure
  * [[parent_id]] - parent object primary key value
  * [[basename]] - original filename with extension
@@ -87,6 +87,10 @@ class FileUploadBehavior extends \yii\base\Behavior
             return;
         }
         $this->file = UploadedFile::getInstance($this->owner, $this->attribute);
+        
+        if (empty($this->file)) {
+            $this->file = UploadedFile::getInstanceByName($this->attribute);
+        }
 
         if ($this->file instanceof UploadedFile) {
             $this->owner->{$this->attribute} = $this->file;
@@ -137,7 +141,9 @@ class FileUploadBehavior extends \yii\base\Behavior
         $path = str_replace('[[model]]', lcfirst($r->getShortName()), $path);
 
         $path = str_replace('[[attribute]]', lcfirst($this->attribute), $path);
-        $path = str_replace('[[id]]', $this->owner->primaryKey, $path);
+        foreach ($this->owner->attributes() as $attribute) {
+            $path = str_replace("[[{$attribute}]]", $this->owner->{$attribute}, $path);
+        }
         $path = str_replace('[[id_path]]', static::makeIdPath($this->owner->primaryKey), $path);
 
         if (isset($this->parentRelationAttribute))

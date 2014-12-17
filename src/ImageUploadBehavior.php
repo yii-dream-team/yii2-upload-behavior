@@ -8,7 +8,7 @@
  * [[app_root]] - application root
  * [[web_root]] - web root
  * [[model]] - model name
- * [[id]] - model id
+ * [[attribute]] - model attribute (may be id or other model attribute)
  * [[id_path]] - id subdirectories structure
  * [[basename]] - original filename with extension
  * [[filename]] - original filename without extension
