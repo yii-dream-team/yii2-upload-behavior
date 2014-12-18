@@ -8,7 +8,9 @@
  * [[app_root]] - application root
  * [[web_root]] - web root
  * [[model]] - model name
- * [[attribute]] - model attribute (may be id or other model attribute)
+ * [[pk]] - model Pk
+ * [[attribute]] - value of $this->attribute
+ * [[attribute_name]] - model attribute (may be id or other model attribute), for example [[attribute_name]]
  * [[id_path]] - id subdirectories structure
  * [[parent_id]] - parent object primary key value
  * [[basename]] - original filename with extension
@@ -141,8 +143,10 @@ class FileUploadBehavior extends \yii\base\Behavior
         $path = str_replace('[[model]]', lcfirst($r->getShortName()), $path);
 
         $path = str_replace('[[attribute]]', lcfirst($this->attribute), $path);
+        $pk = implode('_', $this->owner->getPrimaryKey(true));
+        $path = str_replace('[[pk]]', lcfirst($pk), $path);
         foreach ($this->owner->attributes() as $attribute) {
-            $path = str_replace("[[{$attribute}]]", $this->owner->{$attribute}, $path);
+            $path = str_replace("[[attribute_{$attribute}]]", $this->owner->{$attribute}, $path);
         }
         $path = str_replace('[[id_path]]', static::makeIdPath($this->owner->primaryKey), $path);
 
@@ -166,6 +170,7 @@ class FileUploadBehavior extends \yii\base\Behavior
      */
     protected static function makeIdPath($id)
     {
+        $id = is_array($id) ? implode('', $id) : $id;
         $length = 10;
         $id = str_pad($id, $length, '0', STR_PAD_RIGHT);
 
