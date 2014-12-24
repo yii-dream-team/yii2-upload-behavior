@@ -9,7 +9,7 @@
  * [[web_root]] - web root
  * [[model]] - model name
  * [[pk]] - model Pk
- * [[attribute]] - value of $this->attribute
+ * [[id]] - the same as [[pk]]
  * [[attribute_name]] - model attribute (may be id or other model attribute), for example [[attribute_name]]
  * [[id_path]] - id subdirectories structure
  * [[basename]] - original filename with extension
@@ -28,10 +28,10 @@
  *              'thumbs' => [
  *                  'thumb' => ['width' => 400, 'height' => 300],
  *              ],
- *              'filePath' => '[[web_root]]/images/[[model]]/[[id]].[[extension]]',
- *              'fileUrl' => '/images/[[model]]/[[id]].[[extension]]',
- *              'thumbPath' => '[[web_root]]/images/[[model]]/[[profile]]_[[id]].[[extension]]',
- *              'thumbUrl' => '/images/[[model]]/[[profile]]_[[id]].[[extension]]',
+ *              'filePath' => '[[web_root]]/images/[[pk]].[[extension]]',
+ *              'fileUrl' => '/images/[[pk]].[[extension]]',
+ *              'thumbPath' => '[[web_root]]/images/[[profile]]_[[pk]].[[extension]]',
+ *              'thumbUrl' => '/images/[[profile]]_[[pk]].[[extension]]',
  *         ],
  *     ];
  * }
@@ -59,12 +59,12 @@ class ImageUploadBehavior extends FileUploadBehavior
     ];
 
     /** @var string Path template for thumbnails. Please use the [[profile]] placeholder. */
-    public $thumbPath = '[[web_root]]/images/[[profile]]_[[id]].[[extension]]';
+    public $thumbPath = '[[web_root]]/images/[[profile]]_[[pk]].[[extension]]';
     /** @var string Url template for thumbnails. */
-    public $thumbUrl = '/images/[[profile]]_[[id]].[[extension]]';
+    public $thumbUrl = '/images/[[profile]]_[[pk]].[[extension]]';
 
-    public $filePath = '[[web_root]]/images/[[id]].[[extension]]';
-    public $fileUrl = '/images/[[id]].[[extension]]';
+    public $filePath = '[[web_root]]/images/[[pk]].[[extension]]';
+    public $fileUrl = '/images/[[pk]].[[extension]]';
 
     /**
      * @inheritdoc
