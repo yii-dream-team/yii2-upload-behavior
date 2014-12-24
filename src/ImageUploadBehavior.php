@@ -8,7 +8,9 @@
  * [[app_root]] - application root
  * [[web_root]] - web root
  * [[model]] - model name
- * [[id]] - model id
+ * [[pk]] - model Pk
+ * [[id]] - the same as [[pk]]
+ * [[attribute_name]] - model attribute (may be id or other model attribute), for example [[attribute_name]]
  * [[id_path]] - id subdirectories structure
  * [[basename]] - original filename with extension
  * [[filename]] - original filename without extension
@@ -26,10 +28,10 @@
  *              'thumbs' => [
  *                  'thumb' => ['width' => 400, 'height' => 300],
  *              ],
- *              'filePath' => '[[web_root]]/images/[[model]]/[[id]].[[extension]]',
- *              'fileUrl' => '/images/[[model]]/[[id]].[[extension]]',
- *              'thumbPath' => '[[web_root]]/images/[[model]]/[[profile]]_[[id]].[[extension]]',
- *              'thumbUrl' => '/images/[[model]]/[[profile]]_[[id]].[[extension]]',
+ *              'filePath' => '[[web_root]]/images/[[pk]].[[extension]]',
+ *              'fileUrl' => '/images/[[pk]].[[extension]]',
+ *              'thumbPath' => '[[web_root]]/images/[[profile]]_[[pk]].[[extension]]',
+ *              'thumbUrl' => '/images/[[profile]]_[[pk]].[[extension]]',
  *         ],
  *     ];
  * }
@@ -40,6 +42,7 @@ namespace yiidreamteam\upload;
 use PHPThumb\GD;
 use yii\db\ActiveRecord;
 use yii\helpers\ArrayHelper;
+use yii\helpers\FileHelper;
 
 /**
  * Class ImageUploadBehavior
@@ -57,12 +60,12 @@ class ImageUploadBehavior extends FileUploadBehavior
     ];
 
     /** @var string Path template for thumbnails. Please use the [[profile]] placeholder. */
-    public $thumbPath = '[[web_root]]/images/[[profile]]_[[id]].[[extension]]';
+    public $thumbPath = '[[web_root]]/images/[[profile]]_[[pk]].[[extension]]';
     /** @var string Url template for thumbnails. */
-    public $thumbUrl = '/images/[[profile]]_[[id]].[[extension]]';
+    public $thumbUrl = '/images/[[profile]]_[[pk]].[[extension]]';
 
-    public $filePath = '[[web_root]]/images/[[id]].[[extension]]';
-    public $fileUrl = '/images/[[id]].[[extension]]';
+    public $filePath = '[[web_root]]/images/[[pk]].[[extension]]';
+    public $fileUrl = '/images/[[pk]].[[extension]]';
 
     /**
      * @inheritdoc
@@ -159,7 +162,7 @@ class ImageUploadBehavior extends FileUploadBehavior
                 /** @var GD $thumb */
                 $thumb = new GD($path);
                 $thumb->adaptiveResize($config['width'], $config['height']);
-                @mkdir(pathinfo($thumbPath, PATHINFO_DIRNAME), 777, true);
+                FileHelper::createDirectory($thumbPath, 0775, true);
                 $thumb->save($thumbPath);
             }
         }
