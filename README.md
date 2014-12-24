@@ -13,7 +13,7 @@ Attach the behavior to your model class:
             'file-upload' => [
                 'class' => '\yiidreamteam\upload\FileUploadBehavior',
                 'attribute' => 'fileUpload',
-                'filePath' => '[[web_root]]/uploads/[[pk]]_[[attribute_name]].[[extension]]',
+                'filePath' => '[[web_root]]/uploads/[[pk]].[[extension]]',
                 'fileUrl' => '/uploads/[[pk]].[[extension]]',
             ],
         ];
@@ -25,8 +25,8 @@ Possible path/url placeholders:
  * [[web_root]] - web root
  * [[model]] - model name
  * [[pk]] - model Pk
- * [[attribute]] - value of $this->attribute
- * [[attribute_name]] - model attribute (may be id or other model attribute), for example [[attribute_name]]
+ * [[id]] - the same as [[pk]]
+ * [[attribute_name]] - model attribute (may be id or other model attribute), for example [[attribute_systemName]]
  * [[id_path]] - id subdirectories structure
  * [[parent_id]] - parent object primary key value
  * [[basename]] - original filename with extension
@@ -75,11 +75,10 @@ Attach the behavior to your model class:
                  'thumbs' => [
                      'thumb' => ['width' => 400, 'height' => 300],
                  ],
-                 'filePath' => '[[web_root]]/images/[[model]]/[[pk]].[[extension]]',
-                 'filePath' => '[[web_root]]/uploads/[[pk]]_[[attribute_name]].[[extension]]',
-                 'thumbPath' => '[[web_root]]/images/[[model]]/[[profile]]_[[pk]].[[extension]]',
-                 'thumbUrl' => '/images/[[model]]/[[profile]]_[[pk]].[[extension]]',
-                 'emptyUrl' => '/images/noimage.jpg',
+                 'filePath' => '[[web_root]]/images/[[pk]].[[extension]]',
+                 'fileUrl' => '/images/[[pk]].[[extension]]',
+                 'thumbPath' => '[[web_root]]/images/[[profile]]_[[pk]].[[extension]]',
+                 'thumbUrl' => '/images/[[profile]]_[[pk]].[[extension]]',
             ],
         ];
     }
@@ -90,8 +89,8 @@ Possible path/url placeholders:
  * [[web_root]] - web root
  * [[model]] - model name
  * [[pk]] - model Pk
- * [[attribute]] - value of $this->attribute
- * [[attribute_name]] - model attribute (may be id or other model attribute), for example [[attribute_name]]
+ * [[id]] - the same as [[pk]]
+ * [[attribute_name]] - model attribute (may be id or other model attribute), for example [[attribute_systemName]]
  * [[id_path]] - id subdirectories structure
  * [[basename]] - original filename with extension
  * [[filename]] - original filename without extension
@@ -133,7 +132,7 @@ You can also get generated thumbnail image url:
 
 or:
   
-    echo $model->getThumbFileUrl('imageUpload', 'thumb', '/images/empty.jpg');
+    echo $model->getThumbFileUrl('imageUpload', 'thumb', '/images/thumb_empty.jpg');
     
 ## Licence ##
 
