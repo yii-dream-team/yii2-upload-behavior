@@ -41,6 +41,7 @@ use yii\base\Exception;
 use yii\base\InvalidCallException;
 use yii\db\ActiveRecord;
 use yii\helpers\ArrayHelper;
+use yii\helpers\FileHelper;
 use yii\helpers\VarDumper;
 use yii\web\UploadedFile;
 
@@ -188,7 +189,7 @@ class FileUploadBehavior extends \yii\base\Behavior
     {
         if ($this->file instanceof UploadedFile) {
             $path = $this->getUploadedFilePath($this->attribute);
-            \yii\helpers\FileHelper::createDirectory(pathinfo($path, PATHINFO_DIRNAME), 0775, true);
+            FileHelper::createDirectory(pathinfo($path, PATHINFO_DIRNAME), 0775, true);
             if (!$this->file->saveAs($path)) {
                 throw new Exception('File saving error.');
             }
