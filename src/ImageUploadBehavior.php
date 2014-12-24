@@ -42,6 +42,7 @@ namespace yiidreamteam\upload;
 use PHPThumb\GD;
 use yii\db\ActiveRecord;
 use yii\helpers\ArrayHelper;
+use yii\helpers\FileHelper;
 
 /**
  * Class ImageUploadBehavior
@@ -161,7 +162,7 @@ class ImageUploadBehavior extends FileUploadBehavior
                 /** @var GD $thumb */
                 $thumb = new GD($path);
                 $thumb->adaptiveResize($config['width'], $config['height']);
-                @mkdir(pathinfo($thumbPath, PATHINFO_DIRNAME), 777, true);
+                FileHelper::createDirectory($thumbPath, 0775, true);
                 $thumb->save($thumbPath);
             }
         }
