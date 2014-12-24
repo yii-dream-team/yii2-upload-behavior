@@ -9,6 +9,7 @@
  * [[web_root]] - web root
  * [[model]] - model name
  * [[pk]] - model Pk
+ * [[id]] - the same as [[pk]]
  * [[attribute]] - value of $this->attribute
  * [[attribute_name]] - model attribute (may be id or other model attribute), for example [[attribute_name]]
  * [[id_path]] - id subdirectories structure
@@ -27,8 +28,8 @@
  *         'file-upload' => [
  *             'class' => '\yiidreamteam\upload\FileUploadBehavior',
  *             'attribute' => 'fileUpload',
- *             'filePath' => '[[web_root]]/uploads/[[id]].[[extension]]',
- *             'fileUrl' => '/uploads/[[id]].[[extension]]',
+ *             'filePath' => '[[web_root]]/uploads/[[pk]].[[extension]]',
+ *             'fileUrl' => '/uploads/[[pk]].[[extension]]',
  *         ],
  *     ];
  * }
@@ -55,9 +56,9 @@ class FileUploadBehavior extends \yii\base\Behavior
     /** @var string Name of attribute which holds the attachment. */
     public $attribute = 'upload';
     /** @var string Path template to use in storing files.5 */
-    public $filePath = '@web/uploads/[[id]].[[extension]]';
+    public $filePath = '@web/uploads/[[pk]].[[extension]]';
     /** @var string Where to store images. */
-    public $fileUrl = '/uploads/[[id]].[[extension]]';
+    public $fileUrl = '/uploads/[[pk]].[[extension]]';
     /** @var string Attribute used to link owner model with it's parent */
     public $parentRelationAttribute;
     /** @var \yii\web\UploadedFile */
@@ -83,8 +84,7 @@ class FileUploadBehavior extends \yii\base\Behavior
      */
     public function beforeValidate()
     {
-        if ($this->owner->{$this->attribute} instanceof UploadedFile)
-        {
+        if ($this->owner->{$this->attribute} instanceof UploadedFile) {
             $this->file = $this->owner->{$this->attribute};
             return;
         }
@@ -138,13 +138,13 @@ class FileUploadBehavior extends \yii\base\Behavior
         $path = str_replace('[[web_root]]', Yii::getAlias('@webroot'), $path);
         $path = str_replace('[[base_url]]', Yii::getAlias('@web'), $path);
 
-        
         $r = new \ReflectionClass($this->owner->className());
         $path = str_replace('[[model]]', lcfirst($r->getShortName()), $path);
 
         $path = str_replace('[[attribute]]', lcfirst($this->attribute), $path);
         $pk = implode('_', $this->owner->getPrimaryKey(true));
         $path = str_replace('[[pk]]', lcfirst($pk), $path);
+        $path = str_replace('[[id]]', lcfirst($pk), $path);
         foreach ($this->owner->attributes() as $attribute) {
             $path = str_replace("[[attribute_{$attribute}]]", $this->owner->{$attribute}, $path);
         }
