@@ -118,13 +118,11 @@ class ImageUploadBehavior extends FileUploadBehavior
      * @param string $attribute
      * @param string $emptyUrl
      * @return string
+     * @deprecated Use $this->getUploadedFileUrl() instead
      */
     public function getImageFileUrl($attribute, $emptyUrl = null)
     {
-        if (!$this->owner->$attribute) {
-            return $emptyUrl;
-        }
-        return $this->getUploadedFileUrl($attribute);
+        return $this->getUploadedFileUrl($attribute, $emptyUrl);
     }
 
     /**
@@ -135,9 +133,9 @@ class ImageUploadBehavior extends FileUploadBehavior
      */
     public function getThumbFileUrl($attribute, $profile = 'thumb', $emptyUrl = null)
     {
-        if (!$this->owner->$attribute) {
+        if (!$this->owner->{$attribute})
             return $emptyUrl;
-        }
+
         $behavior = static::getInstance($this->owner, $attribute);
         if ($behavior->createThumbsOnRequest)
             $behavior->createThumbs();
@@ -153,6 +151,9 @@ class ImageUploadBehavior extends FileUploadBehavior
             $this->createThumbs();
     }
 
+    /**
+     * Creates image thumbnails
+     */
     public function createThumbs()
     {
         $path = $this->getUploadedFilePath($this->attribute);

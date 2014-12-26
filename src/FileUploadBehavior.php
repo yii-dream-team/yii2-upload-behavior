@@ -135,34 +135,45 @@ class FileUploadBehavior extends \yii\base\Behavior
     public function resolvePath($path)
     {
         $path = Yii::getAlias($path);
-        $path = str_replace('[[app_root]]', Yii::getAlias('@app'), $path);
-        $path = str_replace('[[web_root]]', Yii::getAlias('@webroot'), $path);
-        $path = str_replace('[[base_url]]', Yii::getAlias('@web'), $path);
-
-        $r = new \ReflectionClass($this->owner->className());
-        $path = str_replace('[[model]]', lcfirst($r->getShortName()), $path);
-
-        $path = str_replace('[[attribute]]', lcfirst($this->attribute), $path);
-        $pk = implode('_', $this->owner->getPrimaryKey(true));
-        $path = str_replace('[[pk]]', lcfirst($pk), $path);
-        $path = str_replace('[[id]]', lcfirst($pk), $path);
-        foreach ($this->owner->attributes() as $attribute) {
-            $path = str_replace("[[attribute_{$attribute}]]", $this->owner->{$attribute}, $path);
-        }
-        $path = str_replace('[[id_path]]', static::makeIdPath($this->owner->primaryKey), $path);
-
-        if (isset($this->parentRelationAttribute))
-            $path = str_replace('[[parent_id]]', $this->owner->{$this->parentRelationAttribute}, $path);
 
         $pi = pathinfo($this->owner->{$this->attribute});
         $fileName = ArrayHelper::getValue($pi, 'filename');
         $extension = strtolower(ArrayHelper::getValue($pi, 'extension'));
 
-        $path = str_replace('[[extension]]', $extension, $path);
-        $path = str_replace('[[filename]]', $fileName, $path);
-        $path = str_replace('[[basename]]', $fileName . '.' . $extension, $path);
-        
-        return $path;
+        return preg_replace_callback('|\[\[([\w\_/]+)\]\]|', function ($matches) use ($fileName, $extension) {
+            $name = $matches[1];
+            switch ($name) {
+                case 'extension':
+                    return $extension;
+                case 'filename':
+                    return $fileName;
+                case 'basename':
+                    return  $fileName . '.' . $extension;
+                case 'app_root':
+                    return Yii::getAlias('@app');
+                case 'web_root':
+                    return Yii::getAlias('@webroot');
+                case 'base_url':
+                    return Yii::getAlias('@web');
+                case 'model':
+                    $r = new \ReflectionClass($this->owner->className());
+                    return lcfirst($r->getShortName());
+                case 'attribute':
+                    return lcfirst($this->attribute);
+                case 'id':
+                case 'pk':
+                    $pk = implode('_', $this->owner->getPrimaryKey(true));
+                    return lcfirst($pk);
+                case 'id_path':
+                    return static::makeIdPath($this->owner->getPrimaryKey());
+                case 'parent_id':
+                    return $this->owner->{$this->parentRelationAttribute};
+            }
+            if (preg_match('|^attribute_(\w+)$|', $name, $am)) {
+                $attribute = $am[1];
+                return $this->owner->{$attribute};
+            }
+        }, $path);
     }
 
     /**
@@ -206,6 +217,8 @@ class FileUploadBehavior extends \yii\base\Behavior
     public function getUploadedFilePath($attribute)
     {
         $behavior = static::getInstance($this->owner, $attribute);
+        if (!$this->owner->{$attribute})
+            return '';
         return $behavior->resolvePath($behavior->filePath);
     }
 
@@ -238,11 +251,14 @@ class FileUploadBehavior extends \yii\base\Behavior
      * Returns file url for the attribute.
      *
      * @param string $attribute
+     * @param string $emptyUrl
      * @return string
      */
-    public function getUploadedFileUrl($attribute)
+    public function getUploadedFileUrl($attribute, $emptyUrl = null)
     {
         $behavior = static::getInstance($this->owner, $attribute);
+        if (!$this->owner->{$attribute})
+            return $emptyUrl;
         return $behavior->resolvePath($behavior->fileUrl);
     }
 }
