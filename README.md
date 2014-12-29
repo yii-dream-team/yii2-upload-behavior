@@ -129,7 +129,7 @@ You can get uploaded image url using model call:
 or:
 
     echo $model->getImageFileUrl('imageUpload', '/images/empty.jpg');
-    
+
 You can also get generated thumbnail image url:
 
     echo $model->getThumbFileUrl('imageUpload', 'thumb');
@@ -137,7 +137,7 @@ You can also get generated thumbnail image url:
 or:
   
     echo $model->getThumbFileUrl('imageUpload', 'thumb', '/images/thumb_empty.jpg');
-    
+
 ## Licence ##
 
 MIT
