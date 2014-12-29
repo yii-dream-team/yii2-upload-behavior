@@ -22,7 +22,7 @@ Attach the behavior to your model class:
             ],
         ];
     }
-    
+
 Possible path/url placeholders:
 
  * [[app_root]] - application root
@@ -46,7 +46,7 @@ Add validation rule:
             ['fileUpload', 'file'],   
         ];
     }
-    
+
 Setup proper form enctype:
 
     $form = \yii\bootstrap\ActiveForm::begin([
@@ -55,7 +55,7 @@ Setup proper form enctype:
             'enctype' => 'multipart/form-data',
         ],
     ]);
-    
+
 File should be uploading fine.
 
 You can get uploaded file url using model call:
@@ -86,7 +86,7 @@ Attach the behavior to your model class:
             ],
         ];
     }
-    
+
 Possible path/url placeholders:
 
  * [[app_root]] - application root
@@ -110,7 +110,7 @@ Add validation rule:
             ['imageUpload', 'file', 'extensions' => 'jpeg, gif, png'],   
         ];
     }
-    
+
 Setup proper form enctype:
 
     $form = \yii\bootstrap\ActiveForm::begin([
@@ -119,7 +119,7 @@ Setup proper form enctype:
             'enctype' => 'multipart/form-data',
         ],
     ]);
-    
+
 File should be uploading fine.
 
 You can get uploaded image url using model call:
