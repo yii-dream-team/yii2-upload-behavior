@@ -1,8 +1,12 @@
 # Yii2 file/image upload behavior for ActiveRecord #
  
+This package is the set of two similar behaviors. The first one allows you to keep the uploaded file as-is.
+ And the second one allows you to generate set of thumbnails for the uploaded image. Behaviors could be attached
+ multiple times for different attributes.
+ 
 ## FileUploadBehavior ##
 
-This behavior allow you to add file and image uploading logic with ActiveRecord behavior.
+This behavior allow you to add file uploading logic with ActiveRecord behavior.
 
 ### Usage ###
 Attach the behavior to your model class:
@@ -138,7 +142,8 @@ or:
 
 MIT
     
-## Contacts ##
+## Links ##
 
-* https://github.com/yii-dream-team/yii2-upload-behavior
-* https://packagist.org/packages/yii-dream-team/yii2-upload-behavior
+* [Official site](http://yiidreamteam.com/yii2/upload-behavior)
+* [Source code on GitHub](https://github.com/yii-dream-team/yii2-upload-behavior)
+* [Composer package on Packagist](https://packagist.org/packages/yii-dream-team/yii2-upload-behavior)
