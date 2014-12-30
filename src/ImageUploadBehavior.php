@@ -1,40 +1,7 @@
 <?php
 /**
  * @author Alexey Samoylov <alexey.samoylov@gmail.com>
- *
- * Simply attach this behavior to your model, specify attribute and file path.
- * You can use placeholders in path configuration:
- *
- * [[app_root]] - application root
- * [[web_root]] - web root
- * [[model]] - model name
- * [[pk]] - model Pk
- * [[id]] - the same as [[pk]]
- * [[attribute_name]] - model attribute (may be id or other model attribute), for example [[attribute_name]]
- * [[id_path]] - id subdirectories structure
- * [[basename]] - original filename with extension
- * [[filename]] - original filename without extension
- * [[extension]] - original extension
- * [[base_url]] - site base url
- * [[profile]] - thumbnail profile name
- *
- * public
- * function behaviors()
- * {
- *     return [
- *         'image-upload' => [
- *              'class' => '\yiidreamteam\upload\ImageUploadBehavior',
- *              'attribute' => 'imageUpload',
- *              'thumbs' => [
- *                  'thumb' => ['width' => 400, 'height' => 300],
- *              ],
- *              'filePath' => '[[web_root]]/images/[[pk]].[[extension]]',
- *              'fileUrl' => '/images/[[pk]].[[extension]]',
- *              'thumbPath' => '[[web_root]]/images/[[profile]]_[[pk]].[[extension]]',
- *              'thumbUrl' => '/images/[[profile]]_[[pk]].[[extension]]',
- *         ],
- *     ];
- * }
+ * @link http://yiidreamteam.com/yii2/upload-behavior
  */
 
 namespace yiidreamteam\upload;
@@ -119,8 +86,8 @@ class ImageUploadBehavior extends FileUploadBehavior
     /**
      *
      * @param string $attribute
-     * @param string $emptyUrl
-     * @return string
+     * @param string|null $emptyUrl
+     * @return string|null
      */
     public function getImageFileUrl($attribute, $emptyUrl = null)
     {
@@ -133,8 +100,8 @@ class ImageUploadBehavior extends FileUploadBehavior
     /**
      * @param string $attribute
      * @param string $profile
-     * @param string $emptyUrl
-     * @return string
+     * @param string|null $emptyUrl
+     * @return string|null
      */
     public function getThumbFileUrl($attribute, $profile = 'thumb', $emptyUrl = null)
     {

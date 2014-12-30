@@ -1,38 +1,7 @@
 <?php
 /**
  * @author Alexey Samoylov <alexey.samoylov@gmail.com>
- *
- * Simply attach this behavior to your model, specify attribute and file path.
- * You can use placeholders in path configuration:
- *
- * [[app_root]] - application root
- * [[web_root]] - web root
- * [[model]] - model name
- * [[pk]] - model Pk
- * [[id]] - the same as [[pk]]
- * [[attribute]] - value of $this->attribute
- * [[attribute_name]] - model attribute (may be id or other model attribute), for example [[attribute_name]]
- * [[id_path]] - id subdirectories structure
- * [[parent_id]] - parent object primary key value
- * [[basename]] - original filename with extension
- * [[filename]] - original filename without extension
- * [[extension]] - original extension
- * [[base_url]] - site base url
- *
- * Usage example:
- *
- * public
- * function behaviors()
- * {
- *     return [
- *         'file-upload' => [
- *             'class' => '\yiidreamteam\upload\FileUploadBehavior',
- *             'attribute' => 'fileUpload',
- *             'filePath' => '[[web_root]]/uploads/[[pk]].[[extension]]',
- *             'fileUrl' => '/uploads/[[pk]].[[extension]]',
- *         ],
- *     ];
- * }
+ * @link http://yiidreamteam.com/yii2/upload-behavior
  */
 namespace yiidreamteam\upload;
 
@@ -252,10 +221,13 @@ class FileUploadBehavior extends \yii\base\Behavior
      * Returns file url for the attribute.
      *
      * @param string $attribute
-     * @return string
+     * @return string|null
      */
     public function getUploadedFileUrl($attribute)
     {
+        if (!$this->owner->{$attribute})
+            return null;
+
         $behavior = static::getInstance($this->owner, $attribute);
         return $behavior->resolvePath($behavior->fileUrl);
     }
