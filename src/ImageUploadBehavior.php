@@ -95,8 +95,14 @@ class ImageUploadBehavior extends FileUploadBehavior
     public function resolveProfilePath($path, $profile)
     {
         $path = $this->resolvePath($path);
-        $path = str_replace('[[profile]]', $profile, $path);
-        return $path;
+        return preg_replace_callback('|\[\[([\w\_/]+)\]\]|', function ($matches) use ($profile) {
+            $name = $matches[1];
+            switch ($name) {
+                case 'profile':
+                    return $profile;
+            }
+            return $name;
+        }, $path);
     }
 
     /**
@@ -118,6 +124,9 @@ class ImageUploadBehavior extends FileUploadBehavior
      */
     public function getImageFileUrl($attribute, $emptyUrl = null)
     {
+        if (!$this->owner->{$attribute})
+            return $emptyUrl;
+
         return $this->getUploadedFileUrl($attribute, $emptyUrl);
     }
 
