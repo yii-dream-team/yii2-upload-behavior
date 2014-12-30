@@ -4,6 +4,20 @@ This package is the set of two similar behaviors. The first one allows you to ke
  And the second one allows you to generate set of thumbnails for the uploaded image. Behaviors could be attached
  multiple times for different attributes.
  
+## Installation ##
+
+The preferred way to install this extension is through [composer](http://getcomposer.org/download/).
+
+Either run
+
+    php composer.phar require --prefer-dist yii-dream-team/yii2-upload-behavior "*"
+
+or add
+
+    "yii-dream-team/yii2-upload-behavior": "*"
+
+to the `require` section of your composer.json.
+ 
 ## FileUploadBehavior ##
 
 This behavior allow you to add file uploading logic with ActiveRecord behavior.
