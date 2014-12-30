@@ -31,7 +31,7 @@ Attach the behavior to your model class:
             'file-upload' => [
                 'class' => '\yiidreamteam\upload\FileUploadBehavior',
                 'attribute' => 'fileUpload',
-                'filePath' => '@web/uploads/[[pk]].[[extension]]',
+                'filePath' => '@webroot/uploads/[[pk]].[[extension]]',
                 'fileUrl' => '/uploads/[[pk]].[[extension]]',
             ],
         ];
@@ -52,7 +52,7 @@ Possible path/url placeholders:
  * [[extension]] - original extension
  * [[base_url]] - site base url
  
- You can also use Yii path aliases like `@web`, `@app` in your path template configuration.
+ You can also use Yii path [aliases](http://www.yiiframework.com/doc-2.0/guide-concept-aliases.html) like `@app`, `@webroot`, `@web` in your path template configuration.
     
 Add validation rule:
 
@@ -95,9 +95,9 @@ Attach the behavior to your model class:
                  'thumbs' => [
                      'thumb' => ['width' => 400, 'height' => 300],
                  ],
-                 'filePath' => '@web/images/[[pk]].[[extension]]',
+                 'filePath' => '@webroot/images/[[pk]].[[extension]]',
                  'fileUrl' => '/images/[[pk]].[[extension]]',
-                 'thumbPath' => '@web/images/[[profile]]_[[pk]].[[extension]]',
+                 'thumbPath' => '@webroot/images/[[profile]]_[[pk]].[[extension]]',
                  'thumbUrl' => '/images/[[profile]]_[[pk]].[[extension]]',
             ],
         ];
@@ -118,7 +118,7 @@ Possible path/url placeholders:
  * [[base_url]] - site base url
  * [[profile]] - thumbnail profile name
  
- You can also use Yii path aliases like `@web`, `@app` in your path template configuration.
+ You can also use Yii path [aliases](http://www.yiiframework.com/doc-2.0/guide-concept-aliases.html) like `@app`, `@webroot`, `@web` in your path template configuration.
     
 Add validation rule:
 

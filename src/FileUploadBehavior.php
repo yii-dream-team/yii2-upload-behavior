@@ -26,7 +26,7 @@ class FileUploadBehavior extends \yii\base\Behavior
     /** @var string Name of attribute which holds the attachment. */
     public $attribute = 'upload';
     /** @var string Path template to use in storing files.5 */
-    public $filePath = '@web/uploads/[[pk]].[[extension]]';
+    public $filePath = '@webroot/uploads/[[pk]].[[extension]]';
     /** @var string Where to store images. */
     public $fileUrl = '/uploads/[[pk]].[[extension]]';
     /** @var string Attribute used to link owner model with it's parent */

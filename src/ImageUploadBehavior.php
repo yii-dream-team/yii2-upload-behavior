@@ -24,11 +24,11 @@ class ImageUploadBehavior extends FileUploadBehavior
     public $thumbs = [];
 
     /** @var string Path template for thumbnails. Please use the [[profile]] placeholder. */
-    public $thumbPath = '@web/images/[[profile]]_[[pk]].[[extension]]';
+    public $thumbPath = '@webroot/images/[[profile]]_[[pk]].[[extension]]';
     /** @var string Url template for thumbnails. */
     public $thumbUrl = '/images/[[profile]]_[[pk]].[[extension]]';
 
-    public $filePath = '@web/images/[[pk]].[[extension]]';
+    public $filePath = '@webroot/images/[[pk]].[[extension]]';
     public $fileUrl = '/images/[[pk]].[[extension]]';
 
     /**
