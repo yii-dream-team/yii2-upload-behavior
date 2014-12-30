@@ -36,23 +36,23 @@ Attach the behavior to your model class:
             ],
         ];
     }
+   
+You can use Yii path [aliases](http://www.yiiframework.com/doc-2.0/guide-concept-aliases.html) 
+like `@app`, `@webroot`, `@web` in your path template configuration.
+
+You can also use additional placeholders in path templates.
+Placeholder `[[foobar]]` will be replaced with appropriate placeholder value. 
 
 Possible path/url placeholders:
 
- * [[app_root]] - application root
- * [[web_root]] - web root
- * [[model]] - model name
- * [[pk]] - model Pk
- * [[id]] - the same as [[pk]]
- * [[attribute_name]] - model attribute (may be id or other model attribute), for example [[attribute_systemName]]
- * [[id_path]] - id subdirectories structure
- * [[parent_id]] - parent object primary key value
- * [[basename]] - original filename with extension
- * [[filename]] - original filename without extension
- * [[extension]] - original extension
- * [[base_url]] - site base url
- 
- You can also use Yii path [aliases](http://www.yiiframework.com/doc-2.0/guide-concept-aliases.html) like `@app`, `@webroot`, `@web` in your path template configuration.
+ * `[[model]]` - model class name
+ * `[[pk]]` - value of the primary key 
+ * `[[id]]` - the same as `[[pk]]`
+ * `[[attribute_name]]` - attribute value, for example `[[attribute_ownerId]]`
+ * `[[id_path]]` - id subdirectories structure (if model primary key is `12345`, placeholder value will be `1/2/3/4/5/0/0/0/0/0`
+ * `[[basename]]` - original filename with extension
+ * `[[filename]]` - original filename without extension
+ * `[[extension]]` - original extension
     
 Add validation rule:
 
@@ -103,22 +103,23 @@ Attach the behavior to your model class:
         ];
     }
 
+You can use Yii path [aliases](http://www.yiiframework.com/doc-2.0/guide-concept-aliases.html) 
+like `@app`, `@webroot`, `@web` in your path template configuration.
+
+You can also use additional placeholders in path templates.
+Placeholder `[[foobar]]` will be replaced with appropriate placeholder value. 
+
 Possible path/url placeholders:
 
- * [[app_root]] - application root
- * [[web_root]] - web root
- * [[model]] - model name
- * [[pk]] - model Pk
- * [[id]] - the same as [[pk]]
- * [[attribute_name]] - model attribute (may be id or other model attribute), for example [[attribute_systemName]]
- * [[id_path]] - id subdirectories structure
- * [[basename]] - original filename with extension
- * [[filename]] - original filename without extension
- * [[extension]] - original extension
- * [[base_url]] - site base url
- * [[profile]] - thumbnail profile name
- 
- You can also use Yii path [aliases](http://www.yiiframework.com/doc-2.0/guide-concept-aliases.html) like `@app`, `@webroot`, `@web` in your path template configuration.
+ * `[[model]]` - model class name
+ * `[[pk]]` - value of the primary key 
+ * `[[id]]` - the same as `[[pk]]`
+ * `[[attribute_name]]` - attribute value, for example `[[attribute_ownerId]]`
+ * `[[id_path]]` - id subdirectories structure (if model primary key is `12345`, placeholder value will be `1/2/3/4/5/0/0/0/0/0`
+ * `[[basename]]` - original filename with extension
+ * `[[filename]]` - original filename without extension
+ * `[[extension]]` - original extension
+ * `[[profile]]` - thumbnail profile name, use it in thumbnail path/url
     
 Add validation rule:
 

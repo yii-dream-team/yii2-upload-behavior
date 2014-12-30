@@ -29,7 +29,10 @@ class FileUploadBehavior extends \yii\base\Behavior
     public $filePath = '@webroot/uploads/[[pk]].[[extension]]';
     /** @var string Where to store images. */
     public $fileUrl = '/uploads/[[pk]].[[extension]]';
-    /** @var string Attribute used to link owner model with it's parent */
+    /**
+     * @var string Attribute used to link owner model with it's parent
+     * @deprecated Use attribute_xxx placeholder instead
+     */
     public $parentRelationAttribute;
     /** @var \yii\web\UploadedFile */
     protected $file;
