@@ -17,7 +17,7 @@ Attach the behavior to your model class:
             'file-upload' => [
                 'class' => '\yiidreamteam\upload\FileUploadBehavior',
                 'attribute' => 'fileUpload',
-                'filePath' => '[[web_root]]/uploads/[[pk]].[[extension]]',
+                'filePath' => '@web/uploads/[[pk]].[[extension]]',
                 'fileUrl' => '/uploads/[[pk]].[[extension]]',
             ],
         ];
@@ -37,6 +37,8 @@ Possible path/url placeholders:
  * [[filename]] - original filename without extension
  * [[extension]] - original extension
  * [[base_url]] - site base url
+ 
+ You can also use Yii path aliases like `@web`, `@app` in your path template configuration.
     
 Add validation rule:
 
@@ -79,9 +81,9 @@ Attach the behavior to your model class:
                  'thumbs' => [
                      'thumb' => ['width' => 400, 'height' => 300],
                  ],
-                 'filePath' => '[[web_root]]/images/[[pk]].[[extension]]',
+                 'filePath' => '@web/images/[[pk]].[[extension]]',
                  'fileUrl' => '/images/[[pk]].[[extension]]',
-                 'thumbPath' => '[[web_root]]/images/[[profile]]_[[pk]].[[extension]]',
+                 'thumbPath' => '@web/images/[[profile]]_[[pk]].[[extension]]',
                  'thumbUrl' => '/images/[[profile]]_[[pk]].[[extension]]',
             ],
         ];
@@ -101,6 +103,8 @@ Possible path/url placeholders:
  * [[extension]] - original extension
  * [[base_url]] - site base url
  * [[profile]] - thumbnail profile name
+ 
+ You can also use Yii path aliases like `@web`, `@app` in your path template configuration.
     
 Add validation rule:
 
@@ -126,7 +130,7 @@ You can get uploaded image url using model call:
 
     echo $model->getImageFileUrl('imageUpload');
 
-or:
+You can specify default image for models without uploaded image:
 
     echo $model->getImageFileUrl('imageUpload', '/images/empty.jpg');
 
@@ -134,7 +138,7 @@ You can also get generated thumbnail image url:
 
     echo $model->getThumbFileUrl('imageUpload', 'thumb');
 
-or:
+You can specify default thumbnail image for models without uploaded image:
   
     echo $model->getThumbFileUrl('imageUpload', 'thumb', '/images/thumb_empty.jpg');
 

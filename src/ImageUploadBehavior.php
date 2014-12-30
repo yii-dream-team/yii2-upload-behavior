@@ -40,7 +40,6 @@
 namespace yiidreamteam\upload;
 
 use PHPThumb\GD;
-use yii\db\ActiveRecord;
 use yii\helpers\ArrayHelper;
 use yii\helpers\FileHelper;
 
@@ -55,16 +54,14 @@ class ImageUploadBehavior extends FileUploadBehavior
     public $createThumbsOnRequest = false;
 
     /** @var array Thumbnail profiles, array of [width, height] */
-    public $thumbs = [
-        'thumb' => ['width' => 200, 'height' => 150],
-    ];
+    public $thumbs = [];
 
     /** @var string Path template for thumbnails. Please use the [[profile]] placeholder. */
-    public $thumbPath = '[[web_root]]/images/[[profile]]_[[pk]].[[extension]]';
+    public $thumbPath = '@web/images/[[profile]]_[[pk]].[[extension]]';
     /** @var string Url template for thumbnails. */
     public $thumbUrl = '/images/[[profile]]_[[pk]].[[extension]]';
 
-    public $filePath = '[[web_root]]/images/[[pk]].[[extension]]';
+    public $filePath = '@web/images/[[pk]].[[extension]]';
     public $fileUrl = '/images/[[pk]].[[extension]]';
 
     /**
@@ -112,13 +109,12 @@ class ImageUploadBehavior extends FileUploadBehavior
         $behavior = static::getInstance($this->owner, $attribute);
         return $behavior->resolveProfilePath($behavior->thumbPath, $profile);
     }
-    
+
     /**
-     * 
+     *
      * @param string $attribute
      * @param string $emptyUrl
      * @return string
-     * @deprecated Use $this->getUploadedFileUrl() instead
      */
     public function getImageFileUrl($attribute, $emptyUrl = null)
     {
@@ -168,5 +164,4 @@ class ImageUploadBehavior extends FileUploadBehavior
             }
         }
     }
-
 }
