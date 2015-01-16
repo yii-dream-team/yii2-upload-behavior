@@ -86,6 +86,9 @@ class FileUploadBehavior extends \yii\base\Behavior
                 $oldModel->cleanFiles();
             }
             $this->owner->{$this->attribute} = $this->file->baseName . '.' . $this->file->extension;
+        } else { // Fix html forms bug, when we have empty file field
+            if(empty($this->owner->{$this->attribute}))
+                $this->owner->{$this->attribute} = $this->owner->oldAttributes[$this->attribute];
         }
     }
 
