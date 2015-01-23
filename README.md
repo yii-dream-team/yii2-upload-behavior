@@ -28,7 +28,7 @@ Attach the behavior to your model class:
     public function behaviors()
     {
         return [
-            'file-upload' => [
+            [
                 'class' => '\yiidreamteam\upload\FileUploadBehavior',
                 'attribute' => 'fileUpload',
                 'filePath' => '@webroot/uploads/[[pk]].[[extension]]',
@@ -89,7 +89,7 @@ Attach the behavior to your model class:
     public function behaviors()
     {
         return [
-            'image-upload' => [
+            [
                  'class' => '\yiidreamteam\upload\ImageUploadBehavior',
                  'attribute' => 'imageUpload',
                  'thumbs' => [
