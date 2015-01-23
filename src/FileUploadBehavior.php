@@ -208,7 +208,7 @@ class FileUploadBehavior extends \yii\base\Behavior
     public static function getInstance(ActiveRecord $model, $attribute)
     {
         foreach ($model->behaviors as $behavior) {
-            if ($behavior instanceof static && $behavior->attribute == $attribute)
+            if ($behavior instanceof self && $behavior->attribute == $attribute)
                 return $behavior;
         }
 
