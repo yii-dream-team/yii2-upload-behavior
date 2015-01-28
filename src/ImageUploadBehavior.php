@@ -135,7 +135,7 @@ class ImageUploadBehavior extends FileUploadBehavior
                 /** @var GD $thumb */
                 $thumb = new GD($path);
                 $thumb->adaptiveResize($config['width'], $config['height']);
-                FileHelper::createDirectory($thumbPath, 0775, true);
+                FileHelper::createDirectory(pathinfo($thumbPath, PATHINFO_DIRNAME), 0775, true);
                 $thumb->save($thumbPath);
             }
         }
