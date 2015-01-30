@@ -148,7 +148,7 @@ class FileUploadBehavior extends \yii\base\Behavior
                 $attribute = $am[1];
                 return $this->owner->{$attribute};
             }
-            return $name;
+            return '[[' . $name . ']]';
         }, $path);
     }
 

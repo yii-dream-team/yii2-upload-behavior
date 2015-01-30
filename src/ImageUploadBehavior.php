@@ -68,7 +68,7 @@ class ImageUploadBehavior extends FileUploadBehavior
                 case 'profile':
                     return $profile;
             }
-            return $name;
+            return '[[' . $name . ']]';
         }, $path);
     }
 
