@@ -175,7 +175,7 @@ class FileUploadBehavior extends \yii\base\Behavior
     public function afterSave()
     {
         if ($this->file instanceof UploadedFile) {
-            $path = $this->getUploadedFilePath($this->attribute);
+            $path = $this->getUploadedFilePath();
             FileHelper::createDirectory(pathinfo($path, PATHINFO_DIRNAME), 0775, true);
             if (!$this->file->saveAs($path)) {
                 throw new Exception('File saving error.');
@@ -187,13 +187,12 @@ class FileUploadBehavior extends \yii\base\Behavior
     /**
      * Returns file path for attribute.
      *
-     * @param string $attribute
      * @return string
      */
-    public function getUploadedFilePath($attribute)
+    public function getUploadedFilePath()
     {
-        $behavior = static::getInstance($this->owner, $attribute);
-        if (!$this->owner->{$attribute})
+        $behavior = static::getInstance($this->owner, $this->attribute);
+        if (!$this->owner->{$this->attribute})
             return '';
         return $behavior->resolvePath($behavior->filePath);
     }
@@ -204,6 +203,7 @@ class FileUploadBehavior extends \yii\base\Behavior
      * @param ActiveRecord $model
      * @param string $attribute
      * @return static
+     * @throws InvalidCallException when the behavior for the given attribute is not found in the model.
      */
     public static function getInstance(ActiveRecord $model, $attribute)
     {
@@ -226,15 +226,14 @@ class FileUploadBehavior extends \yii\base\Behavior
     /**
      * Returns file url for the attribute.
      *
-     * @param string $attribute
      * @return string|null
      */
-    public function getUploadedFileUrl($attribute)
+    public function getUploadedFileUrl()
     {
-        if (!$this->owner->{$attribute})
+        if (!$this->owner->{$this->attribute})
             return null;
 
-        $behavior = static::getInstance($this->owner, $attribute);
+        $behavior = static::getInstance($this->owner, $this->attribute);
         return $behavior->resolvePath($behavior->fileUrl);
     }
 }

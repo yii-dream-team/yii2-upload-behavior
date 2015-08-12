@@ -73,42 +73,39 @@ class ImageUploadBehavior extends FileUploadBehavior
     }
 
     /**
-     * @param string $attribute
      * @param string $profile
      * @return string
      */
-    public function getThumbFilePath($attribute, $profile = 'thumb')
+    public function getThumbFilePath($profile = 'thumb')
     {
-        $behavior = static::getInstance($this->owner, $attribute);
+        $behavior = static::getInstance($this->owner, $this->attribute);
         return $behavior->resolveProfilePath($behavior->thumbPath, $profile);
     }
 
     /**
      *
-     * @param string $attribute
      * @param string|null $emptyUrl
      * @return string|null
      */
-    public function getImageFileUrl($attribute, $emptyUrl = null)
+    public function getImageFileUrl($emptyUrl = null)
     {
-        if (!$this->owner->{$attribute})
+        if (!$this->owner->{$this->attribute})
             return $emptyUrl;
 
-        return $this->getUploadedFileUrl($attribute, $emptyUrl);
+        return $this->getUploadedFileUrl($this->attribute, $emptyUrl);
     }
 
     /**
-     * @param string $attribute
      * @param string $profile
      * @param string|null $emptyUrl
      * @return string|null
      */
-    public function getThumbFileUrl($attribute, $profile = 'thumb', $emptyUrl = null)
+    public function getThumbFileUrl($profile = 'thumb', $emptyUrl = null)
     {
-        if (!$this->owner->{$attribute})
+        if (!$this->owner->{$this->attribute})
             return $emptyUrl;
 
-        $behavior = static::getInstance($this->owner, $attribute);
+        $behavior = static::getInstance($this->owner, $this->attribute);
         if ($behavior->createThumbsOnRequest)
             $behavior->createThumbs();
         return $behavior->resolveProfilePath($behavior->thumbUrl, $profile);
@@ -128,7 +125,7 @@ class ImageUploadBehavior extends FileUploadBehavior
      */
     public function createThumbs()
     {
-        $path = $this->getUploadedFilePath($this->attribute);
+        $path = $this->getUploadedFilePath();
         foreach ($this->thumbs as $profile => $config) {
             $thumbPath = static::getThumbFilePath($this->attribute, $profile);
             if (!is_file($thumbPath)) {
