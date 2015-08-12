@@ -44,11 +44,13 @@ class ImageUploadBehavior extends FileUploadBehavior
     /**
      * @inheritdoc
      */
-    public function cleanFiles()
+    public function cleanFiles($attribute = null)
     {
+        $attribute = $this->getAttributeName($attribute);
+
         parent::cleanFiles();
         foreach (array_keys($this->thumbs) as $profile) {
-            @unlink($this->getThumbFilePath($this->attribute, $profile));
+            @unlink($this->getThumbFilePath($attribute, $profile));
         }
     }
 
@@ -73,42 +75,45 @@ class ImageUploadBehavior extends FileUploadBehavior
     }
 
     /**
-     * @param string $attribute
      * @param string $profile
      * @return string
      */
-    public function getThumbFilePath($attribute, $profile = 'thumb')
+    public function getThumbFilePath($attribute = null, $profile = 'thumb')
     {
+        $attribute = $this->getAttributeName($attribute);
+
         $behavior = static::getInstance($this->owner, $attribute);
         return $behavior->resolveProfilePath($behavior->thumbPath, $profile);
     }
 
     /**
      *
-     * @param string $attribute
      * @param string|null $emptyUrl
      * @return string|null
      */
-    public function getImageFileUrl($attribute, $emptyUrl = null)
+    public function getImageFileUrl($attribute = null, $emptyUrl = null)
     {
+        $attribute = $this->getAttributeName($attribute);
+
         if (!$this->owner->{$attribute})
             return $emptyUrl;
 
-        return $this->getUploadedFileUrl($attribute, $emptyUrl);
+        return $this->getUploadedFileUrl($this->attribute, $emptyUrl);
     }
 
     /**
-     * @param string $attribute
      * @param string $profile
      * @param string|null $emptyUrl
      * @return string|null
      */
-    public function getThumbFileUrl($attribute, $profile = 'thumb', $emptyUrl = null)
+    public function getThumbFileUrl($attribute = null, $profile = 'thumb', $emptyUrl = null)
     {
+        $attribute = $this->getAttributeName($attribute);
+
         if (!$this->owner->{$attribute})
             return $emptyUrl;
 
-        $behavior = static::getInstance($this->owner, $attribute);
+        $behavior = static::getInstance($this->owner, $this->attribute);
         if ($behavior->createThumbsOnRequest)
             $behavior->createThumbs();
         return $behavior->resolveProfilePath($behavior->thumbUrl, $profile);
@@ -126,18 +131,19 @@ class ImageUploadBehavior extends FileUploadBehavior
     /**
      * Creates image thumbnails
      */
-    public function createThumbs()
+    public function createThumbs($attribute = null)
     {
-        $path = $this->getUploadedFilePath($this->attribute);
+        $attribute = $this->getAttributeName($attribute);
+
+        $path = $this->getUploadedFilePath($attribute);
         foreach ($this->thumbs as $profile => $config) {
-            $thumbPath = static::getThumbFilePath($this->attribute, $profile);
-            if (!is_file($thumbPath)) {
-                /** @var GD $thumb */
-                $thumb = new GD($path);
-                $thumb->adaptiveResize($config['width'], $config['height']);
-                FileHelper::createDirectory(pathinfo($thumbPath, PATHINFO_DIRNAME), 0775, true);
-                $thumb->save($thumbPath);
-            }
+            $thumbPath = static::getThumbFilePath($attribute, $profile);
+
+            /** @var GD $thumb */
+            $thumb = new GD($path);
+            $thumb->adaptiveResize($config['width'], $config['height']);
+            FileHelper::createDirectory(pathinfo($thumbPath, PATHINFO_DIRNAME), 0775, true);
+            $thumb->save($thumbPath);
         }
     }
 }
