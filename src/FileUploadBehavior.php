@@ -107,15 +107,16 @@ class FileUploadBehavior extends \yii\base\Behavior
      * @param string $path
      * @return string
      */
-    public function resolvePath($path)
+    public function resolvePath($path, $attribute = null)
     {
+        $attribute = $this->getAttributeName($attribute);
         $path = Yii::getAlias($path);
 
-        $pi = pathinfo($this->owner->{$this->attribute});
+        $pi = pathinfo($this->owner->{$attribute});
         $fileName = ArrayHelper::getValue($pi, 'filename');
         $extension = strtolower(ArrayHelper::getValue($pi, 'extension'));
 
-        return preg_replace_callback('|\[\[([\w\_/]+)\]\]|', function ($matches) use ($fileName, $extension) {
+        return preg_replace_callback('|\[\[([\w\_/]+)\]\]|', function ($matches) use ($fileName, $extension, $attribute) {
             $name = $matches[1];
             switch ($name) {
                 case 'extension':
@@ -134,7 +135,7 @@ class FileUploadBehavior extends \yii\base\Behavior
                     $r = new \ReflectionClass($this->owner->className());
                     return lcfirst($r->getShortName());
                 case 'attribute':
-                    return lcfirst($this->attribute);
+                    return lcfirst($attribute);
                 case 'id':
                 case 'pk':
                     $pk = implode('_', $this->owner->getPrimaryKey(true));
@@ -189,10 +190,12 @@ class FileUploadBehavior extends \yii\base\Behavior
      *
      * @return string
      */
-    public function getUploadedFilePath()
+    public function getUploadedFilePath($attribute = null)
     {
-        $behavior = static::getInstance($this->owner, $this->attribute);
-        if (!$this->owner->{$this->attribute})
+        $attribute = $this->getAttributeName($attribute);
+
+        $behavior = static::getInstance($this->owner, $attribute);
+        if (!$this->owner->{$attribute})
             return '';
         return $behavior->resolvePath($behavior->filePath);
     }
@@ -228,12 +231,28 @@ class FileUploadBehavior extends \yii\base\Behavior
      *
      * @return string|null
      */
-    public function getUploadedFileUrl()
+    public function getUploadedFileUrl($attribute = null)
     {
-        if (!$this->owner->{$this->attribute})
+        $attribute = $this->getAttributeName($attribute);
+
+        if (!$this->owner->{$attribute})
             return null;
 
         $behavior = static::getInstance($this->owner, $this->attribute);
         return $behavior->resolvePath($behavior->fileUrl);
+    }
+
+    /**
+     * Helper function that returns the instance attribute if passed argument is empty or the argument itself otherwise.
+     * @param $attribute
+     * @return string
+     */
+    protected function getAttributeName($attribute)
+    {
+        if (empty($attribute)) {
+            return $this->attribute;
+        } else {
+            return $attribute;
+        }
     }
 }
