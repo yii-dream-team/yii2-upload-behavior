@@ -131,7 +131,7 @@ class ImageUploadBehavior extends FileUploadBehavior
         $path = $this->getUploadedFilePath($this->attribute);
         foreach ($this->thumbs as $profile => $config) {
             $thumbPath = static::getThumbFilePath($this->attribute, $profile);
-            if (!is_file($thumbPath)) {
+            if (is_file($path) && !is_file($thumbPath)) {
                 /** @var GD $thumb */
                 $thumb = new GD($path);
                 $thumb->adaptiveResize($config['width'], $config['height']);
