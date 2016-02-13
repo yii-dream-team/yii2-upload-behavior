@@ -81,9 +81,10 @@ class FileUploadBehavior extends \yii\base\Behavior
     {
         if ($this->file instanceof UploadedFile) {
             if (!$this->owner->isNewRecord) {
-                /** @var static $oldModel */
+                /** @var ActiveRecord $oldModel */
                 $oldModel = $this->owner->findOne($this->owner->primaryKey);
-                $oldModel->cleanFiles();
+                $behavior = static::getInstance($oldModel, $this->attribute);
+                $behavior->cleanFiles();
             }
             $this->owner->{$this->attribute} = $this->file->baseName . '.' . $this->file->extension;
         } else { // Fix html forms bug, when we have empty file field

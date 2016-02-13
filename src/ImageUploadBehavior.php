@@ -20,7 +20,7 @@ class ImageUploadBehavior extends FileUploadBehavior
     public $createThumbsOnSave = true;
     public $createThumbsOnRequest = false;
 
-    /** @var array Thumbnail profiles, array of [width, height] */
+    /** @var array Thumbnail profiles, array of [width, height, ... PHPThumb options] */
     public $thumbs = [];
 
     /** @var string Path template for thumbnails. Please use the [[profile]] placeholder. */
@@ -94,7 +94,7 @@ class ImageUploadBehavior extends FileUploadBehavior
         if (!$this->owner->{$attribute})
             return $emptyUrl;
 
-        return $this->getUploadedFileUrl($attribute, $emptyUrl);
+        return $this->getUploadedFileUrl($attribute);
     }
 
     /**
@@ -132,9 +132,19 @@ class ImageUploadBehavior extends FileUploadBehavior
         foreach ($this->thumbs as $profile => $config) {
             $thumbPath = static::getThumbFilePath($this->attribute, $profile);
             if (is_file($path) && !is_file($thumbPath)) {
-                /** @var GD $thumb */
-                $thumb = new GD($path);
-                $thumb->adaptiveResize($config['width'], $config['height']);
+
+                // setup image processor function
+                if (isset($config['processor']) && is_callable($config['processor'])) {
+                    $processor = $config['processor'];
+                    unset($config['processor']);
+                } else {
+                    $processor = function (GD $thumb) use ($config) {
+                        $thumb->adaptiveResize($config['width'], $config['height']);
+                    };
+                }
+
+                $thumb = new GD($path, $config);
+                call_user_func($processor, $thumb, $this->attribute);
                 FileHelper::createDirectory(pathinfo($thumbPath, PATHINFO_DIRNAME), 0775, true);
                 $thumb->save($thumbPath);
             }
