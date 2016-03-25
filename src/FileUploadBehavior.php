@@ -149,6 +149,10 @@ class FileUploadBehavior extends \yii\base\Behavior
                 $attribute = $am[1];
                 return $this->owner->{$attribute};
             }
+            if (preg_match('|^md5_attribute_(\w+)$|', $name, $am)) {
+                $attribute = $am[1];
+                return md5($this->owner->{$attribute});
+            }
             return '[[' . $name . ']]';
         }, $path);
     }
