@@ -19,6 +19,7 @@ class ImageUploadBehavior extends FileUploadBehavior
 
     public $createThumbsOnSave = true;
     public $createThumbsOnRequest = false;
+    public $rotateImageByExif = true;
 
     /** @var array Thumbnail profiles, array of [width, height, ... PHPThumb options] */
     public $thumbs = [];
@@ -119,8 +120,42 @@ class ImageUploadBehavior extends FileUploadBehavior
      */
     public function afterFileSave()
     {
+        if ($this->rotateImageByExif == true)
+            $this->rotateImageByExifOrientation();
+
         if ($this->createThumbsOnSave == true)
             $this->createThumbs();
+    }
+
+    /**
+     * Method: Rotate image by Exif orientation
+     */
+    public function rotateImageByExifOrientation() {
+
+        $path = $this->getUploadedFilePath($this->attribute);
+
+        $exif = exif_read_data($path);
+        $orientation = isset($exif['Orientation']) ? $exif['Orientation'] : null;
+
+        if (!empty($orientation)) {
+            $image = new GD($path);
+
+            switch ($orientation) {
+                case 3:
+                    $image->rotateImageNDegrees(180);
+                    break;
+
+                case 6:
+                    $image->rotateImageNDegrees(-90);
+                    break;
+
+                case 8:
+                    $image->rotateImageNDegrees(90);
+                    break;
+            }
+            $image->save($path);
+        }
+
     }
 
     /**
