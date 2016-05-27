@@ -1,10 +1,5 @@
 <?php
-/**
- * @author Alexey Samoylov <alexey.samoylov@gmail.com>
- * @link http://yiidreamteam.com/yii2/upload-behavior
- */
-
-namespace yiidreamteam\upload;
+namespace bajadev\upload;
 
 use PHPThumb\GD;
 use yii\helpers\ArrayHelper;
@@ -54,6 +49,17 @@ class ImageUploadBehavior extends FileUploadBehavior
     }
 
     /**
+     * @param string $attribute
+     * @param string $profile
+     * @return string
+     */
+    public function getThumbFilePath($attribute, $profile = 'thumb')
+    {
+        $behavior = static::getInstance($this->owner, $attribute);
+        return $behavior->resolveProfilePath($behavior->thumbPath, $profile);
+    }
+
+    /**
      * Resolves profile path for thumbnail profile.
      *
      * @param string $path
@@ -71,17 +77,6 @@ class ImageUploadBehavior extends FileUploadBehavior
             }
             return '[[' . $name . ']]';
         }, $path);
-    }
-
-    /**
-     * @param string $attribute
-     * @param string $profile
-     * @return string
-     */
-    public function getThumbFilePath($attribute, $profile = 'thumb')
-    {
-        $behavior = static::getInstance($this->owner, $attribute);
-        return $behavior->resolveProfilePath($behavior->thumbPath, $profile);
     }
 
     /**
@@ -116,49 +111,6 @@ class ImageUploadBehavior extends FileUploadBehavior
     }
 
     /**
-     * After file save event handler.
-     */
-    public function afterFileSave()
-    {
-        if ($this->rotateImageByExif == true)
-            $this->rotateImageByExifOrientation();
-
-        if ($this->createThumbsOnSave == true)
-            $this->createThumbs();
-    }
-
-    /**
-     * Method: Rotate image by Exif orientation
-     */
-    public function rotateImageByExifOrientation() {
-
-        $path = $this->getUploadedFilePath($this->attribute);
-
-        $exif = exif_read_data($path);
-        $orientation = isset($exif['Orientation']) ? $exif['Orientation'] : null;
-
-        if (!empty($orientation)) {
-            $image = new GD($path);
-
-            switch ($orientation) {
-                case 3:
-                    $image->rotateImageNDegrees(180);
-                    break;
-
-                case 6:
-                    $image->rotateImageNDegrees(-90);
-                    break;
-
-                case 8:
-                    $image->rotateImageNDegrees(90);
-                    break;
-            }
-            $image->save($path);
-        }
-
-    }
-
-    /**
      * Creates image thumbnails
      */
     public function createThumbs()
@@ -184,5 +136,49 @@ class ImageUploadBehavior extends FileUploadBehavior
                 $thumb->save($thumbPath);
             }
         }
+    }
+
+    /**
+     * After file save event handler.
+     */
+    public function afterFileSave()
+    {
+        if ($this->rotateImageByExif == true)
+            $this->rotateImageByExifOrientation();
+
+        if ($this->createThumbsOnSave == true)
+            $this->createThumbs();
+    }
+
+    /**
+     * Method: Rotate image by Exif orientation
+     */
+    public function rotateImageByExifOrientation()
+    {
+
+        $path = $this->getUploadedFilePath($this->attribute);
+
+        $exif = exif_read_data($path);
+        $orientation = isset($exif['Orientation']) ? $exif['Orientation'] : null;
+
+        if (!empty($orientation)) {
+            $image = new GD($path);
+
+            switch ($orientation) {
+                case 3:
+                    $image->rotateImageNDegrees(180);
+                    break;
+
+                case 6:
+                    $image->rotateImageNDegrees(-90);
+                    break;
+
+                case 8:
+                    $image->rotateImageNDegrees(90);
+                    break;
+            }
+            $image->save($path);
+        }
+
     }
 }

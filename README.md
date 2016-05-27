@@ -10,11 +10,11 @@ The preferred way to install this extension is through [composer](http://getcomp
 
 Either run
 
-    php composer.phar require --prefer-dist yii-dream-team/yii2-upload-behavior "*"
+    php composer.phar require --prefer-dist bajadev/yii2-upload-behavior "*"
 
 or add
 
-    "yii-dream-team/yii2-upload-behavior": "*"
+    "bajadev/yii2-upload-behavior": "*"
 
 to the `require` section of your composer.json.
  
@@ -90,7 +90,7 @@ Attach the behavior to your model class:
     {
         return [
             [
-                 'class' => '\yiidreamteam\upload\ImageUploadBehavior',
+                 'class' => '\bajadev\upload\ImageUploadBehavior',
                  'attribute' => 'imageUpload',
                  'thumbs' => [
                      'thumb' => ['width' => 400, 'height' => 300],
@@ -160,9 +160,3 @@ You can specify default thumbnail image for models without uploaded image:
 ## Licence ##
 
 MIT
-    
-## Links ##
-
-* [Official site](http://yiidreamteam.com/yii2/upload-behavior)
-* [Source code on GitHub](https://github.com/yii-dream-team/yii2-upload-behavior)
-* [Composer package on Packagist](https://packagist.org/packages/yii-dream-team/yii2-upload-behavior)

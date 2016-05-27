@@ -1,9 +1,5 @@
 <?php
-/**
- * @author Alexey Samoylov <alexey.samoylov@gmail.com>
- * @link http://yiidreamteam.com/yii2/upload-behavior
- */
-namespace yiidreamteam\upload;
+namespace bajadev\upload;
 
 use Yii;
 use yii\base\Exception;
@@ -94,6 +90,23 @@ class FileUploadBehavior extends \yii\base\Behavior
     }
 
     /**
+     * Returns behavior instance for specified class and attribute
+     *
+     * @param ActiveRecord $model
+     * @param string $attribute
+     * @return static
+     */
+    public static function getInstance(ActiveRecord $model, $attribute)
+    {
+        foreach ($model->behaviors as $behavior) {
+            if ($behavior instanceof self && $behavior->attribute == $attribute)
+                return $behavior;
+        }
+
+        throw new InvalidCallException('Missing behavior for attribute ' . VarDumper::dumpAsString($attribute));
+    }
+
+    /**
      * Removes files associated with attribute
      */
     public function cleanFiles()
@@ -124,7 +137,7 @@ class FileUploadBehavior extends \yii\base\Behavior
                 case 'filename':
                     return $fileName;
                 case 'basename':
-                    return  $fileName . '.' . $extension;
+                    return $fileName . '.' . $extension;
                 case 'app_root':
                     return Yii::getAlias('@app');
                 case 'web_root':
@@ -201,23 +214,6 @@ class FileUploadBehavior extends \yii\base\Behavior
         if (!$this->owner->{$attribute})
             return '';
         return $behavior->resolvePath($behavior->filePath);
-    }
-
-    /**
-     * Returns behavior instance for specified class and attribute
-     *
-     * @param ActiveRecord $model
-     * @param string $attribute
-     * @return static
-     */
-    public static function getInstance(ActiveRecord $model, $attribute)
-    {
-        foreach ($model->behaviors as $behavior) {
-            if ($behavior instanceof self && $behavior->attribute == $attribute)
-                return $behavior;
-        }
-
-        throw new InvalidCallException('Missing behavior for attribute ' . VarDumper::dumpAsString($attribute));
     }
 
     /**
