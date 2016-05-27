@@ -29,7 +29,7 @@ Attach the behavior to your model class:
     {
         return [
             [
-                'class' => '\yiidreamteam\upload\FileUploadBehavior',
+                'class' => '\bajadev\upload\FileUploadBehavior',
                 'attribute' => 'fileUpload',
                 'filePath' => '@webroot/uploads/[[pk]].[[extension]]',
                 'fileUrl' => '/uploads/[[pk]].[[extension]]',
