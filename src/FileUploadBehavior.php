@@ -115,6 +115,7 @@ class FileUploadBehavior extends \yii\base\Behavior
         $pi = pathinfo($this->owner->{$this->attribute});
         $fileName = ArrayHelper::getValue($pi, 'filename');
         $extension = strtolower(ArrayHelper::getValue($pi, 'extension'));
+        $uniqName = uniqid(rand(), true);
 
         return preg_replace_callback('|\[\[([\w\_/]+)\]\]|', function ($matches) use ($fileName, $extension) {
             $name = $matches[1];
@@ -123,6 +124,8 @@ class FileUploadBehavior extends \yii\base\Behavior
                     return $extension;
                 case 'filename':
                     return $fileName;
+                case 'uniqname':
+                    return $uniqName;
                 case 'basename':
                     return  $fileName . '.' . $extension;
                 case 'app_root':
