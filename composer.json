@@ -1,5 +1,5 @@
 {
-  "name": "bakadev/yii2-upload-behavior",
+  "name": "bajadev/yii2-upload-behavior",
   "type": "yii2-extension",
   "description": "Yii2 file/image upload behavior for ActiveRecord",
   "keywords": [
