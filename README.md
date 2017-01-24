@@ -93,12 +93,14 @@ Attach the behavior to your model class:
                  'class' => '\bajadev\upload\ImageUploadBehavior',
                  'attribute' => 'imageUpload',
                  'thumbs' => [
-                     'thumb' => ['width' => 400, 'height' => 300],
+                     'thumb' => ['width' => 400, 'height' => 300, 'crop' => false],
                  ],
+                 'deleteOriginalFile' => true,
+                 'rotateImageByExif' => true,
                  'filePath' => '@webroot/images/[[pk]].[[extension]]',
-                 'fileUrl' => '/images/[[pk]].[[extension]]',
+                 'fileUrl' => '@web/images/[[pk]].[[extension]]',
                  'thumbPath' => '@webroot/images/[[profile]]_[[pk]].[[extension]]',
-                 'thumbUrl' => '/images/[[profile]]_[[pk]].[[extension]]',
+                 'thumbUrl' => '@web/images/[[profile]]_[[pk]].[[extension]]',
             ],
         ];
     }
@@ -115,7 +117,7 @@ Possible path/url placeholders:
  * `[[pk]]` - value of the primary key 
  * `[[id]]` - the same as `[[pk]]`
  * `[[attribute_name]]` - attribute value, for example `[[attribute_ownerId]]`
- * `[[id_path]]` - id subdirectories structure (if model primary key is `12345`, placeholder value will be `1/2/3/4/5/0/0/0/0/0`
+ * `[[id_path]]` - id subdirectories structure (if model primary key is `12345`, placeholder value will be `1/2/3/4/5/`
  * `[[basename]]` - original filename with extension
  * `[[filename]]` - original filename without extension
  * `[[extension]]` - original extension
@@ -133,7 +135,6 @@ Add validation rule:
 Setup proper form enctype:
 
     $form = \yii\bootstrap\ActiveForm::begin([
-        'enableClientValidation' => false,
         'options' => [
             'enctype' => 'multipart/form-data',
         ],

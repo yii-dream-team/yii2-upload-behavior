@@ -58,11 +58,10 @@ class FileUploadBehavior extends \yii\base\Behavior
             return;
         }
         $this->file = UploadedFile::getInstance($this->owner, $this->attribute);
-        
+
         if (empty($this->file)) {
             $this->file = UploadedFile::getInstanceByName($this->attribute);
         }
-
         if ($this->file instanceof UploadedFile) {
             $this->owner->{$this->attribute} = $this->file;
         }
@@ -84,8 +83,10 @@ class FileUploadBehavior extends \yii\base\Behavior
             }
             $this->owner->{$this->attribute} = $this->file->baseName . '.' . $this->file->extension;
         } else { // Fix html forms bug, when we have empty file field
-            if (!$this->owner->isNewRecord && empty($this->owner->{$this->attribute}))
-                $this->owner->{$this->attribute} = ArrayHelper::getValue($this->owner->oldAttributes, $this->attribute, null);
+            if (!$this->owner->isNewRecord && empty($this->owner->{$this->attribute})) {
+                $this->owner->{$this->attribute} = ArrayHelper::getValue($this->owner->oldAttributes, $this->attribute,
+                    null);
+            }
         }
     }
 
@@ -99,8 +100,9 @@ class FileUploadBehavior extends \yii\base\Behavior
     public static function getInstance(ActiveRecord $model, $attribute)
     {
         foreach ($model->behaviors as $behavior) {
-            if ($behavior instanceof self && $behavior->attribute == $attribute)
+            if ($behavior instanceof self && $behavior->attribute == $attribute) {
                 return $behavior;
+            }
         }
 
         throw new InvalidCallException('Missing behavior for attribute ' . VarDumper::dumpAsString($attribute));
@@ -129,7 +131,7 @@ class FileUploadBehavior extends \yii\base\Behavior
         $fileName = ArrayHelper::getValue($pi, 'filename');
         $extension = strtolower(ArrayHelper::getValue($pi, 'extension'));
 
-        return preg_replace_callback('|\[\[([\w\_/]+)\]\]|', function ($matches) use ($fileName, $extension) {
+        return preg_replace_callback('|\[\[([\w\_/]+)\]\]|', function ($matches) use ($fileName, $extension, $path) {
             $name = $matches[1];
             switch ($name) {
                 case 'extension':
@@ -148,7 +150,7 @@ class FileUploadBehavior extends \yii\base\Behavior
                     $pk = implode('_', $this->owner->getPrimaryKey(true));
                     return lcfirst($pk);
                 case 'id_path':
-                    return static::makeIdPath($this->owner->getPrimaryKey());
+                    return $this->makeIdPath($this->owner->getPrimaryKey());
                 case 'parent_id':
                     return $this->owner->{$this->parentRelationAttribute};
             }
@@ -168,15 +170,16 @@ class FileUploadBehavior extends \yii\base\Behavior
      * @param integer $id
      * @return string
      */
-    protected static function makeIdPath($id)
+    protected function makeIdPath($id)
     {
         $id = is_array($id) ? implode('', $id) : $id;
         $length = 5;
         $id = str_pad($id, $length, '0', STR_PAD_RIGHT);
 
         $result = [];
-        for ($i = 0; $i < $length; $i++)
+        for ($i = 0; $i < $length; $i++) {
             $result[] = substr($id, $i, 1);
+        }
 
         return implode('/', $result);
     }
@@ -205,8 +208,9 @@ class FileUploadBehavior extends \yii\base\Behavior
     public function getUploadedFilePath($attribute)
     {
         $behavior = static::getInstance($this->owner, $attribute);
-        if (!$this->owner->{$attribute})
+        if (!$this->owner->{$attribute}) {
             return '';
+        }
         return $behavior->resolvePath($behavior->filePath);
     }
 
@@ -226,8 +230,9 @@ class FileUploadBehavior extends \yii\base\Behavior
      */
     public function getUploadedFileUrl($attribute)
     {
-        if (!$this->owner->{$attribute})
+        if (!$this->owner->{$attribute}) {
             return null;
+        }
 
         $behavior = static::getInstance($this->owner, $attribute);
         return $behavior->resolvePath($behavior->fileUrl);

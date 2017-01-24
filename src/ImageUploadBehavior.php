@@ -1,6 +1,7 @@
 <?php
 namespace bajadev\upload;
 
+use Imagine\Image\Box;
 use yii\helpers\ArrayHelper;
 use yii\helpers\FileHelper;
 use yii\imagine\Image;
@@ -103,8 +104,9 @@ class ImageUploadBehavior extends FileUploadBehavior
      */
     public function getThumbFileUrl($attribute, $profile = 'thumb', $emptyUrl = null)
     {
-        if (!$this->owner->{$attribute})
+        if (!$this->owner->{$attribute}) {
             return $emptyUrl;
+        }
 
         $behavior = static::getInstance($this->owner, $attribute);
         if ($behavior->createThumbsOnRequest) {
@@ -124,18 +126,22 @@ class ImageUploadBehavior extends FileUploadBehavior
             if (is_file($path) && !is_file($thumbPath)) {
                 FileHelper::createDirectory(pathinfo($thumbPath, PATHINFO_DIRNAME), 0775, true);
 
+                $imagine = Image::getImagine();
+                $photo = $imagine->open($path);
+
                 if ($this->rotateImageByExif) {
-                    $path = Image::autorotate($path);
+                    $photo = Image::autorotate($photo);
                 }
+
                 if (isset($config['crop']) && $config['crop'] == true) {
-                    Image::thumbnail($path, $config['width'], $config['height'])
+                    Image::thumbnail($photo, $config['width'], $config['height'])
                         ->save($thumbPath);
                 } else {
-                    Image::resize($path, $config['width'], $config['height'])
-                        ->save($thumbPath);
+                    $photo->thumbnail(new Box($config['width'], $config['height']))->save($thumbPath);
                 }
             }
         }
+
         if ($this->deleteOriginalFile) {
             @unlink($path);
         }
