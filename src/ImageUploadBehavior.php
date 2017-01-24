@@ -3,6 +3,7 @@ namespace bajadev\upload;
 
 use yii\helpers\ArrayHelper;
 use yii\helpers\FileHelper;
+use yii\imagine\Image;
 
 /**
  * Class ImageUploadBehavior
