@@ -1,7 +1,6 @@
 <?php
 namespace bajadev\upload;
 
-use PHPThumb\GD;
 use yii\helpers\ArrayHelper;
 use yii\helpers\FileHelper;
 
@@ -14,6 +13,7 @@ class ImageUploadBehavior extends FileUploadBehavior
 
     public $createThumbsOnSave = true;
     public $createThumbsOnRequest = false;
+    public $deleteOriginalFile = true;
     public $rotateImageByExif = true;
 
     /** @var array Thumbnail profiles, array of [width, height, ... PHPThumb options] */
@@ -87,8 +87,9 @@ class ImageUploadBehavior extends FileUploadBehavior
      */
     public function getImageFileUrl($attribute, $emptyUrl = null)
     {
-        if (!$this->owner->{$attribute})
+        if (!$this->owner->{$attribute}) {
             return $emptyUrl;
+        }
 
         return $this->getUploadedFileUrl($attribute);
     }
@@ -105,8 +106,9 @@ class ImageUploadBehavior extends FileUploadBehavior
             return $emptyUrl;
 
         $behavior = static::getInstance($this->owner, $attribute);
-        if ($behavior->createThumbsOnRequest)
+        if ($behavior->createThumbsOnRequest) {
             $behavior->createThumbs();
+        }
         return $behavior->resolveProfilePath($behavior->thumbUrl, $profile);
     }
 
@@ -119,22 +121,22 @@ class ImageUploadBehavior extends FileUploadBehavior
         foreach ($this->thumbs as $profile => $config) {
             $thumbPath = static::getThumbFilePath($this->attribute, $profile);
             if (is_file($path) && !is_file($thumbPath)) {
-
-                // setup image processor function
-                if (isset($config['processor']) && is_callable($config['processor'])) {
-                    $processor = $config['processor'];
-                    unset($config['processor']);
-                } else {
-                    $processor = function (GD $thumb) use ($config) {
-                        $thumb->adaptiveResize($config['width'], $config['height']);
-                    };
-                }
-
-                $thumb = new GD($path, $config);
-                call_user_func($processor, $thumb, $this->attribute);
                 FileHelper::createDirectory(pathinfo($thumbPath, PATHINFO_DIRNAME), 0775, true);
-                $thumb->save($thumbPath);
+
+                if ($this->rotateImageByExif) {
+                    $path = Image::autorotate($path);
+                }
+                if (isset($config['crop']) && $config['crop'] == true) {
+                    Image::thumbnail($path, $config['width'], $config['height'])
+                        ->save($thumbPath);
+                } else {
+                    Image::resize($path, $config['width'], $config['height'])
+                        ->save($thumbPath);
+                }
             }
+        }
+        if ($this->deleteOriginalFile) {
+            @unlink($path);
         }
     }
 
@@ -143,42 +145,8 @@ class ImageUploadBehavior extends FileUploadBehavior
      */
     public function afterFileSave()
     {
-        if ($this->rotateImageByExif == true)
-            $this->rotateImageByExifOrientation();
-
-        if ($this->createThumbsOnSave == true)
+        if ($this->createThumbsOnSave == true) {
             $this->createThumbs();
-    }
-
-    /**
-     * Method: Rotate image by Exif orientation
-     */
-    public function rotateImageByExifOrientation()
-    {
-
-        $path = $this->getUploadedFilePath($this->attribute);
-
-        $exif = exif_read_data($path);
-        $orientation = isset($exif['Orientation']) ? $exif['Orientation'] : null;
-
-        if (!empty($orientation)) {
-            $image = new GD($path);
-
-            switch ($orientation) {
-                case 3:
-                    $image->rotateImageNDegrees(180);
-                    break;
-
-                case 6:
-                    $image->rotateImageNDegrees(-90);
-                    break;
-
-                case 8:
-                    $image->rotateImageNDegrees(90);
-                    break;
-            }
-            $image->save($path);
         }
-
     }
 }

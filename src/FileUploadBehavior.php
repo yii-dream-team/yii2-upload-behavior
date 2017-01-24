@@ -138,12 +138,6 @@ class FileUploadBehavior extends \yii\base\Behavior
                     return $fileName;
                 case 'basename':
                     return $fileName . '.' . $extension;
-                case 'app_root':
-                    return Yii::getAlias('@app');
-                case 'web_root':
-                    return Yii::getAlias('@webroot');
-                case 'base_url':
-                    return Yii::getAlias('@web');
                 case 'model':
                     $r = new \ReflectionClass($this->owner->className());
                     return lcfirst($r->getShortName());
@@ -177,7 +171,7 @@ class FileUploadBehavior extends \yii\base\Behavior
     protected static function makeIdPath($id)
     {
         $id = is_array($id) ? implode('', $id) : $id;
-        $length = 10;
+        $length = 5;
         $id = str_pad($id, $length, '0', STR_PAD_RIGHT);
 
         $result = [];
