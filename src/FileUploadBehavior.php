@@ -226,6 +226,10 @@ class FileUploadBehavior extends \yii\base\Behavior
     public function beforeDelete()
     {
         $this->cleanFiles();
+        $dir = dirname($this->resolvePath($this->filePath));
+        if (!FileHelper::findFiles($dir)) {
+            FileHelper::removeDirectory($dir);
+        }
     }
 
     /**
