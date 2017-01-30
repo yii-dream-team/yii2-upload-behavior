@@ -49,6 +49,8 @@ Possible path/url placeholders:
  * `[[pk]]` - value of the primary key 
  * `[[id]]` - the same as `[[pk]]`
  * `[[attribute_name]]` - attribute value, for example `[[attribute_ownerId]]`
+ * `[[slug_attribute_name]]` - generate attribute value by Inflector, for example `[[attribute_ownerId]]`
+ * `[[md5_attribute_name]]` - generate md5 value, for example `[[attribute_ownerId]]`
  * `[[id_path]]` - id subdirectories structure (if model primary key is `12345`, placeholder value will be `1/2/3/4/5`
  * `[[basename]]` - original filename with extension
  * `[[filename]]` - original filename without extension
@@ -117,6 +119,8 @@ Possible path/url placeholders:
  * `[[pk]]` - value of the primary key 
  * `[[id]]` - the same as `[[pk]]`
  * `[[attribute_name]]` - attribute value, for example `[[attribute_ownerId]]`
+ * `[[slug_attribute_name]]` - generate attribute value by Inflector, for example `[[attribute_ownerId]]`
+ * `[[md5_attribute_name]]` - generate md5 value, for example `[[attribute_ownerId]]`
  * `[[id_path]]` - id subdirectories structure (if model primary key is `12345`, placeholder value will be `1/2/3/4/5/`
  * `[[basename]]` - original filename with extension
  * `[[filename]]` - original filename without extension

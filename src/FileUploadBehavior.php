@@ -8,6 +8,7 @@ use yii\db\ActiveRecord;
 use yii\helpers\ArrayHelper;
 use yii\helpers\FileHelper;
 use yii\helpers\VarDumper;
+use yii\helpers\Inflector;
 use yii\web\UploadedFile;
 
 /**
@@ -161,6 +162,10 @@ class FileUploadBehavior extends \yii\base\Behavior
             if (preg_match('|^md5_attribute_(\w+)$|', $name, $am)) {
                 $attribute = $am[1];
                 return md5($this->owner->{$attribute});
+            }
+            if (preg_match('|^slug_attribute_(\w+)$|', $name, $am)) {
+                $attribute = $am[1];
+                return Inflector::slug($this->owner->{$attribute});
             }
             return '[[' . $name . ']]';
         }, $path);
