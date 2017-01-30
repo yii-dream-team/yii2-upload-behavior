@@ -25,7 +25,7 @@ class FileUploadBehavior extends \yii\base\Behavior
     /** @var string Path template to use in storing files.5 */
     public $filePath = '@webroot/uploads/[[pk]].[[extension]]';
     /** @var string Where to store images. */
-    public $fileUrl = '/uploads/[[pk]].[[extension]]';
+    public $fileUrl = '@web/uploads/[[pk]].[[extension]]';
     /**
      * @var string Attribute used to link owner model with it's parent
      * @deprecated Use attribute_xxx placeholder instead
@@ -89,6 +89,7 @@ class FileUploadBehavior extends \yii\base\Behavior
                     null);
             }
         }
+        $this->resolvePath($this->filePath);
     }
 
     /**
@@ -165,10 +166,37 @@ class FileUploadBehavior extends \yii\base\Behavior
             }
             if (preg_match('|^slug_attribute_(\w+)$|', $name, $am)) {
                 $attribute = $am[1];
-                return Inflector::slug($this->owner->{$attribute});
+                return $this->generateSlugByName($attribute);
             }
             return '[[' . $name . ']]';
         }, $path);
+    }
+
+    /**
+     * Method: generateSlugByName
+     * @param $attribute
+     * @return string
+     * @throws Exception
+     * @author Bajadev <info@bajadev.hu>
+     * @link http://bajadev.hu
+     */
+    protected function generateSlugByName($attribute)
+    {
+        if (!$this->owner->{$attribute}) {
+            throw new Exception('The atttribute can not be empty.');
+        }
+        $fileName = Inflector::slug($this->owner->{$attribute});
+        if (!$this->owner->isNewRecord && $this->owner->isAttributeChanged($attribute)) {
+            if ($this->owner->{$this->attribute}) {
+                $oldModel = $this->owner->findOne($this->owner->primaryKey);
+                $behavior = static::getInstance($oldModel, $this->attribute);
+                $oldPath = $behavior->resolvePath($behavior->filePath);
+                $oldFileName = Inflector::slug($oldModel->{$attribute});
+                $newPath = str_replace([$oldFileName], [$fileName], $oldPath);
+                rename($oldPath, $newPath);
+            }
+        }
+        return $fileName;
     }
 
     /**
