@@ -133,11 +133,14 @@ class ImageUploadBehavior extends FileUploadBehavior
                     $photo = Image::autorotate($photo);
                 }
 
+                $quality = isset($config['quality']) ? $config['quality'] : 100;
+
                 if (isset($config['crop']) && $config['crop'] == true) {
                     Image::thumbnail($photo, $config['width'], $config['height'])
-                        ->save($thumbPath);
+                        ->save($thumbPath, ['quality' => $quality]);
                 } else {
-                    $photo->thumbnail(new Box($config['width'], $config['height']))->save($thumbPath);
+                    $photo->thumbnail(new Box($config['width'], $config['height']))->save($thumbPath,
+                        ['quality' => $quality]);
                 }
             }
         }

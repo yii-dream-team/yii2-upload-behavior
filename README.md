@@ -49,7 +49,7 @@ Possible path/url placeholders:
  * `[[pk]]` - value of the primary key 
  * `[[id]]` - the same as `[[pk]]`
  * `[[attribute_name]]` - attribute value, for example `[[attribute_ownerId]]`
- * `[[id_path]]` - id subdirectories structure (if model primary key is `12345`, placeholder value will be `1/2/3/4/5/0/0/0/0/0`
+ * `[[id_path]]` - id subdirectories structure (if model primary key is `12345`, placeholder value will be `1/2/3/4/5`
  * `[[basename]]` - original filename with extension
  * `[[filename]]` - original filename without extension
  * `[[extension]]` - original extension
@@ -93,7 +93,7 @@ Attach the behavior to your model class:
                  'class' => '\bajadev\upload\ImageUploadBehavior',
                  'attribute' => 'imageUpload',
                  'thumbs' => [
-                     'thumb' => ['width' => 400, 'height' => 300, 'crop' => false],
+                     'thumb' => ['width' => 400, 'height' => 300, 'crop' => false, 'quality' => 80],
                  ],
                  'deleteOriginalFile' => true,
                  'rotateImageByExif' => true,
