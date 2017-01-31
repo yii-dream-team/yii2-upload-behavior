@@ -1,5 +1,5 @@
 {
-  "name": "yii-dream-team/yii2-upload-behavior",
+  "name": "bajadev/yii2-upload-behavior",
   "type": "yii2-extension",
   "description": "Yii2 file/image upload behavior for ActiveRecord",
   "keywords": [
@@ -11,30 +11,30 @@
     "thumb"
   ],
   "license": "MIT",
-  "homepage": "http://yiidreamteam.com/yii2/upload-behavior",
+  "homepage": "http://bajadev.hu",
   "authors": [
     {
-      "name": "Alexey Samoylov",
-      "email": "alexey.samoylov@gmail.com",
-      "homepage": "http://yiidreamteam.com/team/alexey",
+      "name": "Bajadev",
+      "email": "info@bajadev.hu",
+      "homepage": "http://bajadev.hu",
       "role": "Developer"
     }
   ],
-  "minimum-stability": "dev",
+  "minimum-stability": "stable",
   "require": {
     "php": ">=5.4.0",
     "yiisoft/yii2": "*",
-    "masterexploder/phpthumb": "*"
+    "yiisoft/yii2-imagine": "2.1"
   },
   "repositories": [
     {
       "type": "git",
-      "url": "https://github.com/yii-dream-team/PHPThumb"
+      "url": "https://github.com/Bajadev/yii2-upload-behavior"
     }
   ],
   "autoload": {
     "psr-4": {
-      "yiidreamteam\\upload\\": "./src"
+      "bajadev\\upload\\": "./src"
     }
   }
 }

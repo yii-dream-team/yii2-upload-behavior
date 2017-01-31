@@ -1,14 +1,10 @@
 <?php
-/**
- * @author Alexey Samoylov <alexey.samoylov@gmail.com>
- * @link http://yiidreamteam.com/yii2/upload-behavior
- */
+namespace bajadev\upload;
 
-namespace yiidreamteam\upload;
-
-use PHPThumb\GD;
+use Imagine\Image\Box;
 use yii\helpers\ArrayHelper;
 use yii\helpers\FileHelper;
+use yii\imagine\Image;
 
 /**
  * Class ImageUploadBehavior
@@ -19,6 +15,8 @@ class ImageUploadBehavior extends FileUploadBehavior
 
     public $createThumbsOnSave = true;
     public $createThumbsOnRequest = false;
+    public $deleteOriginalFile = true;
+    public $rotateImageByExif = true;
 
     /** @var array Thumbnail profiles, array of [width, height, ... PHPThumb options] */
     public $thumbs = [];
@@ -53,6 +51,17 @@ class ImageUploadBehavior extends FileUploadBehavior
     }
 
     /**
+     * @param string $attribute
+     * @param string $profile
+     * @return string
+     */
+    public function getThumbFilePath($attribute, $profile = 'thumb')
+    {
+        $behavior = static::getInstance($this->owner, $attribute);
+        return $behavior->resolveProfilePath($behavior->thumbPath, $profile);
+    }
+
+    /**
      * Resolves profile path for thumbnail profile.
      *
      * @param string $path
@@ -73,17 +82,6 @@ class ImageUploadBehavior extends FileUploadBehavior
     }
 
     /**
-     * @param string $attribute
-     * @param string $profile
-     * @return string
-     */
-    public function getThumbFilePath($attribute, $profile = 'thumb')
-    {
-        $behavior = static::getInstance($this->owner, $attribute);
-        return $behavior->resolveProfilePath($behavior->thumbPath, $profile);
-    }
-
-    /**
      *
      * @param string $attribute
      * @param string|null $emptyUrl
@@ -91,8 +89,9 @@ class ImageUploadBehavior extends FileUploadBehavior
      */
     public function getImageFileUrl($attribute, $emptyUrl = null)
     {
-        if (!$this->owner->{$attribute})
+        if (!$this->owner->{$attribute}) {
             return $emptyUrl;
+        }
 
         return $this->getUploadedFileUrl($attribute);
     }
@@ -105,22 +104,15 @@ class ImageUploadBehavior extends FileUploadBehavior
      */
     public function getThumbFileUrl($attribute, $profile = 'thumb', $emptyUrl = null)
     {
-        if (!$this->owner->{$attribute})
+        if (!$this->owner->{$attribute}) {
             return $emptyUrl;
+        }
 
         $behavior = static::getInstance($this->owner, $attribute);
-        if ($behavior->createThumbsOnRequest)
+        if ($behavior->createThumbsOnRequest) {
             $behavior->createThumbs();
+        }
         return $behavior->resolveProfilePath($behavior->thumbUrl, $profile);
-    }
-
-    /**
-     * After file save event handler.
-     */
-    public function afterFileSave()
-    {
-        if ($this->createThumbsOnSave == true)
-            $this->createThumbs();
     }
 
     /**
@@ -132,22 +124,39 @@ class ImageUploadBehavior extends FileUploadBehavior
         foreach ($this->thumbs as $profile => $config) {
             $thumbPath = static::getThumbFilePath($this->attribute, $profile);
             if (is_file($path) && !is_file($thumbPath)) {
+                FileHelper::createDirectory(pathinfo($thumbPath, PATHINFO_DIRNAME), 0775, true);
 
-                // setup image processor function
-                if (isset($config['processor']) && is_callable($config['processor'])) {
-                    $processor = $config['processor'];
-                    unset($config['processor']);
-                } else {
-                    $processor = function (GD $thumb) use ($config) {
-                        $thumb->adaptiveResize($config['width'], $config['height']);
-                    };
+                $imagine = Image::getImagine();
+                $photo = $imagine->open($path);
+
+                if ($this->rotateImageByExif) {
+                    $photo = Image::autorotate($photo);
                 }
 
-                $thumb = new GD($path, $config);
-                call_user_func($processor, $thumb, $this->attribute);
-                FileHelper::createDirectory(pathinfo($thumbPath, PATHINFO_DIRNAME), 0775, true);
-                $thumb->save($thumbPath);
+                $quality = isset($config['quality']) ? $config['quality'] : 100;
+
+                if (isset($config['crop']) && $config['crop'] == true) {
+                    Image::thumbnail($photo, $config['width'], $config['height'])
+                        ->save($thumbPath, ['quality' => $quality]);
+                } else {
+                    $photo->thumbnail(new Box($config['width'], $config['height']))->save($thumbPath,
+                        ['quality' => $quality]);
+                }
             }
+        }
+
+        if ($this->deleteOriginalFile) {
+            @unlink($path);
+        }
+    }
+
+    /**
+     * After file save event handler.
+     */
+    public function afterFileSave()
+    {
+        if ($this->createThumbsOnSave == true) {
+            $this->createThumbs();
         }
     }
 }
