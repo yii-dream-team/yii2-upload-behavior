@@ -53,6 +53,17 @@ class ImageUploadBehavior extends FileUploadBehavior
     }
 
     /**
+     * @param string $attribute
+     * @param string $profile
+     * @return string
+     */
+    public function getThumbFilePath($attribute, $profile = 'thumb')
+    {
+        $behavior = static::getInstance($this->owner, $attribute);
+        return $behavior->resolveProfilePath($behavior->thumbPath, $profile);
+    }
+
+    /**
      * Resolves profile path for thumbnail profile.
      *
      * @param string $path
@@ -73,17 +84,6 @@ class ImageUploadBehavior extends FileUploadBehavior
     }
 
     /**
-     * @param string $attribute
-     * @param string $profile
-     * @return string
-     */
-    public function getThumbFilePath($attribute, $profile = 'thumb')
-    {
-        $behavior = static::getInstance($this->owner, $attribute);
-        return $behavior->resolveProfilePath($behavior->thumbPath, $profile);
-    }
-
-    /**
      *
      * @param string $attribute
      * @param string|null $emptyUrl
@@ -91,8 +91,9 @@ class ImageUploadBehavior extends FileUploadBehavior
      */
     public function getImageFileUrl($attribute, $emptyUrl = null)
     {
-        if (!$this->owner->{$attribute})
+        if (!$this->owner->{$attribute}) {
             return $emptyUrl;
+        }
 
         return $this->getUploadedFileUrl($attribute);
     }
@@ -105,22 +106,17 @@ class ImageUploadBehavior extends FileUploadBehavior
      */
     public function getThumbFileUrl($attribute, $profile = 'thumb', $emptyUrl = null)
     {
-        if (!$this->owner->{$attribute})
+        if (!$this->owner->{$attribute}) {
             return $emptyUrl;
+        }
 
         $behavior = static::getInstance($this->owner, $attribute);
-        if ($behavior->createThumbsOnRequest)
-            $behavior->createThumbs();
-        return $behavior->resolveProfilePath($behavior->thumbUrl, $profile);
-    }
 
-    /**
-     * After file save event handler.
-     */
-    public function afterFileSave()
-    {
-        if ($this->createThumbsOnSave == true)
-            $this->createThumbs();
+        if ($behavior->createThumbsOnRequest) {
+            $behavior->createThumbs();
+        }
+
+        return $behavior->resolveProfilePath($behavior->thumbUrl, $profile);
     }
 
     /**
@@ -148,6 +144,16 @@ class ImageUploadBehavior extends FileUploadBehavior
                 FileHelper::createDirectory(pathinfo($thumbPath, PATHINFO_DIRNAME), 0775, true);
                 $thumb->save($thumbPath);
             }
+        }
+    }
+
+    /**
+     * After file save event handler.
+     */
+    public function afterFileSave()
+    {
+        if ($this->createThumbsOnSave == true) {
+            $this->createThumbs();
         }
     }
 }
