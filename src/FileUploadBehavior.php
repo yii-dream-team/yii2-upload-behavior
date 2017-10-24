@@ -8,7 +8,9 @@ namespace yiidreamteam\upload;
 
 use Yii;
 use yii\base\InvalidCallException;
+use yii\base\Model;
 use yii\db\ActiveRecord;
+use yii\db\BaseActiveRecord;
 use yii\helpers\ArrayHelper;
 use yii\helpers\FileHelper;
 use yii\helpers\VarDumper;
@@ -108,11 +110,11 @@ class FileUploadBehavior extends \yii\base\Behavior
     /**
      * Returns behavior instance for specified object and attribute
      *
-     * @param ActiveRecord $model
+     * @param Model $model
      * @param string $attribute
      * @return static
      */
-    public static function getInstance(ActiveRecord $model, $attribute)
+    public static function getInstance(Model $model, $attribute)
     {
         foreach ($model->behaviors as $behavior) {
             if ($behavior instanceof self && $behavior->attribute == $attribute) {
