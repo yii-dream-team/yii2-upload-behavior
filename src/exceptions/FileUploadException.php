@@ -36,7 +36,7 @@ class FileUploadException extends \Exception
 
 
     protected function prepareMessage($code, $defaultMessage) {
-        $message = ArrayHelper::getValue($this->errors, $uploadErrorCode, $defaultMessage);
+        $message = ArrayHelper::getValue($this->errors, $code, $defaultMessage);
         $message += ' Error code is ' . $code;
 
         return $message;
