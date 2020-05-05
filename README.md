@@ -10,7 +10,7 @@ The preferred way to install this extension is through [composer](http://getcomp
 
 Either run
 
-    php composer.phar require --prefer-dist bajadev/yii2-upload-behavior "*"
+    composer bajadev/yii2-upload-behavior "*"
 
 or add
 
@@ -95,7 +95,7 @@ Attach the behavior to your model class:
                  'class' => '\bajadev\upload\ImageUploadBehavior',
                  'attribute' => 'imageUpload',
                  'thumbs' => [
-                     'thumb' => ['width' => 400, 'height' => 300, 'crop' => false, 'quality' => 80],
+                     'thumb' => ['width' => 400, 'height' => 300, 'crop' => true, 'quality' => 80, 'inset' => true],
                  ],
                  'deleteOriginalFile' => true,
                  'rotateImageByExif' => true,

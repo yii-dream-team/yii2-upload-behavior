@@ -30,6 +30,10 @@
     {
       "type": "git",
       "url": "https://github.com/Bajadev/yii2-upload-behavior"
+    },
+    {
+      "type": "composer",
+      "url": "https://asset-packagist.org"
     }
   ],
   "autoload": {
