@@ -70,7 +70,7 @@ class ImageUploadBehavior extends FileUploadBehavior
             try {
                 FileHelper::unlink($this->getThumbFilePath($this->attribute, $profile));
             } catch (\Exception $e) {
-                Yii::warning('File delete is failed');
+                \Yii::warning('File delete is failed');
             }
         }
     }
@@ -187,7 +187,7 @@ class ImageUploadBehavior extends FileUploadBehavior
             try {
                 FileHelper::unlink($path);
             } catch (\Exception $e) {
-                Yii::warning('File delete is failed');
+                \Yii::warning('File delete is failed');
             }
         }
     }
