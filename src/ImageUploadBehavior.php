@@ -152,34 +152,39 @@ class ImageUploadBehavior extends FileUploadBehavior
                 continue;
             }
             FileHelper::createDirectory(pathinfo($thumbPath, PATHINFO_DIRNAME));
+            $pathInfo = pathInfo($path);
 
-            $imagine = Image::getImagine();
-            $photo = $imagine->open($path);
+            if ($pathInfo['extension'] !== 'svg') {
+                $imagine = Image::getImagine();
+                $photo = $imagine->open($path);
 
-            if ($this->rotateImageByExif) {
-                $photo = Image::autorotate($photo);
-            }
-
-            $quality = ArrayHelper::getValue($config, 'quality', 100);
-            $crop = ArrayHelper::getValue($config, 'crop', true);
-            $insetMode = ArrayHelper::getValue($config, 'inset', false);
-
-            if ($crop == true) {
-                $thumbnail = Image::thumbnail($photo, $config['width'], $config['height']);
-                if ($insetMode) {
-                    $size = $thumbnail->getSize();
-                    if ($size->getWidth() < $config['width'] or $size->getHeight() < $config['height']) {
-                        $white = Image::getImagine()->create(new Box($config['width'], $config['height']));
-                        $thumbnail = $white->paste($thumbnail,
-                            new Point($config['width'] / 2 - $size->getWidth() / 2,
-                                $config['height'] / 2 - $size->getHeight() / 2)
-                        );
-                    }
+                if ($this->rotateImageByExif) {
+                    $photo = Image::autorotate($photo);
                 }
-                $thumbnail->save($thumbPath, ['quality' => $quality]);
+
+                $quality = ArrayHelper::getValue($config, 'quality', 100);
+                $crop = ArrayHelper::getValue($config, 'crop', true);
+                $insetMode = ArrayHelper::getValue($config, 'inset', false);
+
+                if ($crop == true) {
+                    $thumbnail = Image::thumbnail($photo, $config['width'], $config['height']);
+                    if ($insetMode) {
+                        $size = $thumbnail->getSize();
+                        if ($size->getWidth() < $config['width'] or $size->getHeight() < $config['height']) {
+                            $white = Image::getImagine()->create(new Box($config['width'], $config['height']));
+                            $thumbnail = $white->paste($thumbnail,
+                                new Point($config['width'] / 2 - $size->getWidth() / 2,
+                                    $config['height'] / 2 - $size->getHeight() / 2)
+                            );
+                        }
+                    }
+                    $thumbnail->save($thumbPath, ['quality' => $quality]);
+                } else {
+                    $photo->thumbnail(new Box($config['width'], $config['height']))
+                        ->save($thumbPath, ['quality' => $quality]);
+                }
             } else {
-                $photo->thumbnail(new Box($config['width'], $config['height']))
-                    ->save($thumbPath, ['quality' => $quality]);
+                copy($path, $thumbPath);
             }
         }
 
